@@ -11,10 +11,12 @@ function IntheBox() {
   return (
     <div className="min-h-screen pt-24 bg-black/40 ">
       <div className="w-full p-3 bg-gray-400 grid grid-cols-4 gap-2 text-center">
+
         <h2 className="p-2 bg-gray-100 rounded-lg">Ürün Adı</h2>
         <h3 className="p-2 bg-gray-100 rounded-lg">Adedi</h3>
         <h3 className="p-2 bg-gray-100 rounded-lg">Fiyatı</h3>
         <h3 className="p-2 bg-gray-100 rounded-lg">Toplam</h3>
+        
       </div>
       {boxList.map((item, index) => (
         <div
