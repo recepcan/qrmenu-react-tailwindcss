@@ -9,7 +9,7 @@ function IntheBox() {
   const totalPrice = boxList.reduce((acc, item) => acc + item.total, 0); // Toplam hesaplama
 
   return (
-    <div className="min-h-screen pt-24 bg-black/40 ">
+    <div className="min-h-screen pt-32 bg-black/40 ">
       <div className="w-full p-3 bg-gray-400 grid grid-cols-4 gap-2 text-center">
 
         <h2 className="p-2 bg-gray-100 rounded-lg">Ürün Adı</h2>

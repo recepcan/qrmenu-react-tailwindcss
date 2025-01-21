@@ -19,8 +19,8 @@ function Products({ category }) {
   };
 
   return (
-    <div className="py-28 sm:px-10 px-5 flex items-center justify-center flex-col w-full">
-      <h2 className="font-bold mb-4 p-3 rounded-lg bg-black/50 text-white text-3xl">Ürünler</h2>
+    <div className="py-44 sm:px-10 px-5 flex items-center justify-center flex-col w-full">
+     
       <ul className="space-y-2 w-full max-md:w-full md:w-[80%]">
         {category.map((item, index) => (
           <li
