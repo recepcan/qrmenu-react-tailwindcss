@@ -40,7 +40,7 @@ function Panel() {
 
   return (
     <div className='min-h-screen w-full  box-border 
-     border-yellow-400 relative bg-gray-100 flex   '>
+     border-yellow-400 relative bg-gray-900 flex   '>
      
 
     {
@@ -55,7 +55,7 @@ function Panel() {
       <div className={`md:flex-1 ${adminMenu && "max-md:hidden" } w-full min-h-full box-border p-2 max-h-screen overflow-y-auto  dark:bg-gray-900 border-black`} >
       
       
-      {tab=== 'Products' && (<Products/>)}
+      {tab=== 'products' && (<Products/>)}
       {tab=== 'users' && (<Users/>)}
       </div>
     </div>
