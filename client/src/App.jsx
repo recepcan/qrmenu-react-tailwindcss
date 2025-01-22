@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import HotDrinks from './pages/HotDrinks';
 import ColdDrinks from './pages/ColdDrinks';
@@ -10,7 +10,14 @@ import Header from './Components/Header';
 import IntheBox from './pages/IntheBox';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp';
+import PrivateRoute from './Components/PrivateRoute';
+import OnlyAdminPrivateRoute from './Components/OnlyAdminPrivateRoute';
+import Panel from './pages/AdminPages/Panel';
 const App = () => {
+
+
   return (
     <div className="h-screen bg-cover  bg-center bg-no-repeat bg-[#031714] "
     style={{
@@ -18,14 +25,26 @@ const App = () => {
     }}>
     
     <Router>
-    <Header/>
-      <Routes>
+    <Routes>
         <Route path="/" element={<Home />} />
+
+        <Route path="/sign-up" element={<SignUp />} />
+        <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sicak-icecekler" element={<HotDrinks />} />
         <Route path="/soguk-icecekler" element={<ColdDrinks />} />
         <Route path="/tatlilar" element={<Sweets />} />
         <Route path="/atistirmaliklar" element={<Cookie />} />
         <Route path="/inthebox" element={<IntheBox />} />
+
+        <Route element={<PrivateRoute />}>
+          <Route path='/panel' element={<Panel />} />
+        </Route>
+        <Route element={<OnlyAdminPrivateRoute />}>
+          {/*<Route path='/create-post' element={<CreatePost />} />
+          <Route path='/update-post/:postId' element={<UpdatePost />} /> */}
+        </Route>
+
+
       </Routes>
     </Router>
     <ToastContainer 

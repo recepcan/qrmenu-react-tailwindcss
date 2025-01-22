@@ -2,6 +2,7 @@ import React from 'react';
 import anaekranfoto from '../assets/anaekran-foto.jpg';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import Header from '../Components/Header';
 
 function Home() {
     const {categoryList} =useSelector(state=>state.product)
@@ -13,11 +14,14 @@ function Home() {
         backgroundImage: `url(${anaekranfoto})`,
       }}
     >
+    <Header/>
       
     <div className='overflow-auto      w-full flex flex-wrap items-center justify-center gap-5 '>
     {
         categoryList.map((item,index)=>(
-            <div className='sm:w-52  sm:h-52 w-40 h-40 bg-cover bg-center 
+            <div 
+            key={index}
+            className='sm:w-52  sm:h-52 w-40 h-40 bg-cover bg-center 
             bg-no-repeat rounded-lg border-2 flex items-center justify-center text-center'
             style={{
               backgroundImage: `url(${item.image})`,

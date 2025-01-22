@@ -1,12 +1,13 @@
 import express from 'express'
 import mongoose from 'mongoose';
 import dotenv from 'dotenv'
-
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 
 import path from 'path'
 
+import userRoutes from './routes/userRoutes.js'
+import authRoutes from './routes/authRoutes.js'
 const app =express();
 
 dotenv.config();
@@ -28,15 +29,15 @@ app.use(cors({
     credentials: true, // Eğer yetkilendirme cookies kullanıyorsanız
   }));
 
-// app.use('/api/auth', authRoutes)
-// app.use('/api/post', postsRoutes)
-// app.use('/api/text', textsRoutes)
-// app.use('/api/user', userRoutes);
-// app.use('/api/publication',publicationRoutes)
-// app.use('/api/service',servicesRoutes)
-// app.use('/api/contact',contactRoutes)
-// app.use('/api/image',galeriRoutes)
-// app.use('/api/images', imageRoutes); // Resim yükleme route
+app.use('/server/auth', authRoutes)
+// app.use('/server/post', postsRoutes)
+// app.use('/server/text', textsRoutes)
+app.use('/server/user', userRoutes);
+// app.use('/server/publication',publicationRoutes)
+// app.use('/server/service',servicesRoutes)
+// app.use('/server/contact',contactRoutes)
+// app.use('/server/image',galeriRoutes)
+// app.use('/server/images', imageRoutes); // Resim yükleme route
 
 
 
