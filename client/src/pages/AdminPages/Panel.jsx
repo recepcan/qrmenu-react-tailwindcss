@@ -13,9 +13,10 @@ import { toast } from 'react-toastify';
 // import AdminTextsComponent from './AdminTextsComponent';
 import { AiOutlineMenu } from 'react-icons/ai';
 import { IoCloseSharp } from 'react-icons/io5';
-import Products from './Products';
+import Products from './DashProducts';
 import Users from './Users';
 import DashSidebar from './DashSidebar';
+import DashProducts from './DashProducts';
 
 
 
@@ -55,7 +56,7 @@ function Panel() {
       <div className={`md:flex-1 ${adminMenu && "max-md:hidden" } w-full min-h-full box-border p-2 max-h-screen overflow-y-auto  dark:bg-gray-900 border-black`} >
       
       
-      {tab=== 'products' && (<Products/>)}
+      {tab=== 'products' && (<DashProducts/>)}
       {tab=== 'users' && (<Users/>)}
       </div>
     </div>

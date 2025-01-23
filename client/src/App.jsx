@@ -15,6 +15,8 @@ import SignUp from './pages/SignUp';
 import PrivateRoute from './Components/PrivateRoute';
 import OnlyAdminPrivateRoute from './Components/OnlyAdminPrivateRoute';
 import Panel from './pages/AdminPages/Panel';
+import CreateProduct from './pages/AdminPages/CreateProduct';
+import UpdateProduct from './pages/AdminPages/UpdateProduct';
 const App = () => {
 
 
@@ -40,8 +42,8 @@ const App = () => {
           <Route path='/panel' element={<Panel />} />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
-          {/*<Route path='/create-post' element={<CreatePost />} />
-          <Route path='/update-post/:postId' element={<UpdatePost />} /> */}
+         <Route path='/create-product' element={<CreateProduct />} />
+        <Route path='/update-product/:productId' element={<UpdateProduct />} />
         </Route>
 
 

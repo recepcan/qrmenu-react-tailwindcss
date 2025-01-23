@@ -8,6 +8,7 @@ import path from 'path'
 
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
+import productRoutes from './routes/productRoutes.js'
 const app =express();
 
 dotenv.config();
@@ -30,7 +31,7 @@ app.use(cors({
   }));
 
 app.use('/server/auth', authRoutes)
-// app.use('/server/post', postsRoutes)
+app.use('/server/product', productRoutes)
 // app.use('/server/text', textsRoutes)
 app.use('/server/user', userRoutes);
 // app.use('/server/publication',publicationRoutes)
