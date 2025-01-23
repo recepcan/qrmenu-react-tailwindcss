@@ -8,6 +8,7 @@ import path from 'path'
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import productRoutes from './routes/productRoutes.js'
+import categoryRoutes from './routes/categoryRoutes.js'
 
 const app = express();
 
@@ -36,6 +37,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use('/server/auth', authRoutes);
 app.use('/server/product', productRoutes);
 app.use('/server/user', userRoutes);
+app.use('/server/category', categoryRoutes);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 

@@ -11,7 +11,7 @@ import { PiPhoneDisconnectThin } from "react-icons/pi";
 import { IoCloseSharp, IoDocumentText, IoDocumentTextSharp } from "react-icons/io5";
 import { FaImages, FaPhoneFlip } from 'react-icons/fa6';
 import { FaInfoCircle, FaMoon, FaUsers } from 'react-icons/fa';
-import { BiSolidSun } from 'react-icons/bi';
+import { BiSolidCategory, BiSolidSun } from 'react-icons/bi';
 import { BsPersonCircle } from "react-icons/bs";
 import { GrTextWrap } from "react-icons/gr";
 
@@ -75,6 +75,10 @@ function DashSideBar({adminMenu}) {
     {
       title:"users",
       icon:<FaUsers />
+    },
+    {
+      title:"category",
+      icon:<BiSolidCategory />
     }
     // {
     //   title: "texts",

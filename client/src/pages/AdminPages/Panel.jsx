@@ -17,6 +17,7 @@ import Products from './DashProducts';
 import Users from './Users';
 import DashSidebar from './DashSidebar';
 import DashProducts from './DashProducts';
+import DashCategory from './DashCategory';
 
 
 
@@ -41,7 +42,7 @@ function Panel() {
 
   return (
     <div className='min-h-screen w-full  box-border 
-     border-yellow-400 relative bg-gray-900 flex   '>
+     border-yellow-400 relative bg-gray-900 flex p-5  '>
      
 
     {
@@ -58,6 +59,7 @@ function Panel() {
       
       {tab=== 'products' && (<DashProducts/>)}
       {tab=== 'users' && (<Users/>)}
+      {tab=== 'category' && (<DashCategory/>)}
       </div>
     </div>
   )

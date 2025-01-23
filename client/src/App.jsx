@@ -17,6 +17,8 @@ import OnlyAdminPrivateRoute from './Components/OnlyAdminPrivateRoute';
 import Panel from './pages/AdminPages/Panel';
 import CreateProduct from './pages/AdminPages/CreateProduct';
 import UpdateProduct from './pages/AdminPages/UpdateProduct';
+import CreateCategory from './pages/AdminPages/CreateCategory';
+import UpdateCategory from './pages/AdminPages/UpdateCategory';
 const App = () => {
 
 
@@ -43,7 +45,10 @@ const App = () => {
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
          <Route path='/create-product' element={<CreateProduct />} />
+         <Route path='/create-category' element={<CreateCategory />} />
+
         <Route path='/update-product/:productId' element={<UpdateProduct />} />
+        <Route path='/update-category/:categoryId' element={<UpdateCategory />} />
         </Route>
 
 
