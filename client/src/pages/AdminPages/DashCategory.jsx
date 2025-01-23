@@ -72,15 +72,15 @@ export default function DashCategory() {
   };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 flex flex-col items-center justify-center space-y-5
+    <div className='table-auto overflow-x-scroll md:mx-auto   p-3 flex flex-col items-center justify-center space-y-5
      scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
       dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
     <Link to={'/create-category'}>
     <Button  gradientDuoTone="tealToLime">create category</Button>
     </Link>  
     {currentUser.isAdmin && userCategory?.length > 0 ? (
-        <>
-          <Table hoverable className='shadow-md'>
+        <div className='w-full'>
+          <Table hoverable className='shadow-md border  w-full'>
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
               <Table.HeadCell>category image</Table.HeadCell>
@@ -98,21 +98,18 @@ export default function DashCategory() {
                     {new Date(category.updatedAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/category/${category._id}`}>
+                    
                       <img
                         src={`http://localhost:5000${category.image}`}
                         alt={category.title}
                         className='w-20 h-10 object-cover bg-gray-500'
                       />
-                    </Link>
+                    
                   </Table.Cell>
                   <Table.Cell>
-                    <Link
-                      className='font-medium text-gray-900 dark:text-white'
-                      to={`/category/${category._id}`}
-                    >
+                    
                       {category.title}
-                    </Link>
+                   
                   </Table.Cell>
                   <Table.Cell>{category.name}</Table.Cell>
                   <Table.Cell>
@@ -146,7 +143,7 @@ export default function DashCategory() {
               Show more
             </button>
           )}
-        </>
+        </div>
       ) : (
         <p>You have no categorys yet!</p>
       )}

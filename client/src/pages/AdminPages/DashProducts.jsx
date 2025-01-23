@@ -79,7 +79,7 @@ export default function DashProducts() {
     </Link> 
     
     {currentUser.isAdmin && userProducts.length > 0 ? (
-        <>
+        <div className='w-full border'>
           <Table hoverable className='shadow-md'>
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
@@ -98,21 +98,18 @@ export default function DashProducts() {
                     {new Date(product.updatedAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/product/${product._id}`}>
+                  
                       <img
                         src={`http://localhost:5000${product.image}`}
                         alt={product.title}
                         className='w-20 h-10 object-cover bg-gray-500'
                       />
-                    </Link>
+                    
                   </Table.Cell>
                   <Table.Cell>
-                    <Link
-                      className='font-medium text-gray-900 dark:text-white'
-                      to={`/product/${product._id}`}
-                    >
+                    
                       {product.title}
-                    </Link>
+                    
                   </Table.Cell>
                   <Table.Cell>{product.category}</Table.Cell>
                   <Table.Cell>
@@ -146,7 +143,7 @@ export default function DashProducts() {
               Show more
             </button>
           )}
-        </>
+        </div>
       ) : (
         <p>You have no products yet!</p>
       )}

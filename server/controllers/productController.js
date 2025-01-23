@@ -130,46 +130,49 @@ export const getproducts = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const sortDirection = req.query.order === 'asc' ? 1 : -1;
+    const sortDirection = req.query.order === "asc" ? 1 : -1;
 
-    const products = await Product.find({
-      ...(req.query.userId && { userId: req.query.userId }),
+    let userId = null;
+
+    // Eğer `username` parametresi varsa, ilgili `userId` değerini bul
+    if (req.query.username) {
+      const user = await User.findOne({ username: req.query.username });
+      if (user) {
+        userId = user._id;
+      } else {
+        return next(errorHandler(404, "User not found"));
+      }
+    }
+
+    const filter = {
+      ...(userId && { userId }), // Eğer username ile eşleşen userId bulunduysa ekle
+      ...(req.query.userId && { userId: req.query.userId }), // Alternatif olarak doğrudan userId filtreleme
       ...(req.query.category && { category: req.query.category }),
-      // ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.productId && { _id: req.query.productId }),
       ...(req.query.searchTerm && {
         $or: [
-          { title: { $regex: req.query.searchTerm, $options: 'i' } },
-          { content: { $regex: req.query.searchTerm, $options: 'i' } },
+          { title: { $regex: req.query.searchTerm, $options: "i" } },
+          { content: { $regex: req.query.searchTerm, $options: "i" } },
         ],
       }),
-    })
+    };
+
+    const products = await Product.find(filter)
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
-    const totalProducts = await Product.countDocuments();
-
-    const now = new Date();
-    const oneMonthAgo = new Date(
-      now.getFullYear(),
-      now.getMonth() - 1,
-      now.getDate()
-    );
-
-    const lastMonthProducts = await Product.countDocuments({
-      createdAt: { $gte: oneMonthAgo },
-    });
+    const totalProducts = await Product.countDocuments(filter);
 
     res.status(200).json({
       products,
       totalProducts,
-      lastMonthProducts,
     });
   } catch (error) {
     next(error);
   }
 };
+
 
 
 // ✅ ÜRÜN SİL

@@ -9,19 +9,33 @@ import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
+import Product from "./models/productModel.js";
+import Category from "./models/categoryModel.js";
+import User from "./models/userModel.js";
 
 const app = express();
 
 dotenv.config();
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
-    console.log("mongodb connected")
-  })
-  .catch(err => {
-    console.log("db error", err)
-  })
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("MongoDB connected");
 
+    // Tüm modellerin indexlerini kaldır
+    await Promise.all([
+      Product.collection.dropIndexes(),
+      Category.collection.dropIndexes(),
+      User.collection.dropIndexes(),
+    ]);
+
+    console.log("All indexes dropped successfully");
+
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+connectDB();
 app.use(express.json());
 app.use(cookieParser());
 
