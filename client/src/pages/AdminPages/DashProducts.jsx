@@ -92,9 +92,9 @@ export default function DashProducts() {
                     {new Date(product.updatedAt).toLocaleDateString()}
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/product/${product.slug}`}>
+                    <Link to={`/product/${product._id}`}>
                       <img
-                        src={product.image}
+                        src={`http://localhost:5000${product.image}`}
                         alt={product.title}
                         className='w-20 h-10 object-cover bg-gray-500'
                       />
@@ -103,7 +103,7 @@ export default function DashProducts() {
                   <Table.Cell>
                     <Link
                       className='font-medium text-gray-900 dark:text-white'
-                      to={`/product/${product.slug}`}
+                      to={`/product/${product._id}`}
                     >
                       {product.title}
                     </Link>

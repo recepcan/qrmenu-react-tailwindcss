@@ -1,40 +1,111 @@
+import fs from 'fs';
 import Product from '../models/productModel.js';
 import { errorHandler } from '../utils/error.js';
+import multer from 'multer';
+import path from 'path';
 
+
+const __dirname=path.resolve()
+// "uploads" klasörü yoksa oluştur
+const uploadDir = 'uploads';
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Multer ayarları
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}${path.extname(file.originalname)}`);
+  },
+});
+
+const upload = multer({ storage });
+
+// ✅ ÜRÜN OLUŞTUR
 export const create = async (req, res, next) => {
-  if (!req.user.isAdmin) {
-    return next(errorHandler(403, 'You are not allowed to create a product'));
-  }
-  if (!req.body.title || !req.body.content) {
-    return next(errorHandler(400, 'Please provide all required fields'));
-  }
-  const slug = req.body.title
-    .split(' ')
-    .join('-')
-    .toLowerCase()
-    .replace(/[^a-zA-Z0-9-]/g, '');
-  const newProduct = new Product({
-    ...req.body,
-    slug,
-    userId: req.user.id,
+  upload.single('image')(req, res, async (err) => {
+    if (err) {
+      return next(errorHandler(500, 'Image upload failed'));
+    }
+
+    try {
+      if (!req.user.isAdmin) {
+        return next(errorHandler(403, 'You are not allowed to create a product'));
+      }
+      if (!req.body.title || !req.body.content) {
+        return next(errorHandler(400, 'Please provide all required fields'));
+      }
+
+      const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
+
+      const newProduct = new Product({
+        title: req.body.title,
+        content: req.body.content,
+        price: req.body.price,
+        stock: req.body.stock,
+        category: req.body.category,
+        userId: req.user.id,
+        image: imageUrl,
+      });
+
+      const savedProduct = await newProduct.save();
+      res.status(201).json(savedProduct);
+    } catch (error) {
+      next(error);
+    }
   });
-  try {
-    const savedProduct = await newProduct.save();
-    res.status(201).json(savedProduct);
-  } catch (error) {
-    next(error);
-  }
 };
 
+// ✅ ÜRÜN GÜNCELLE
+export const updateproduct = async (req, res, next) => {
+  upload.single('image')(req, res, async (err) => {
+    if (err) {
+      return next(errorHandler(500, 'Image upload failed'));
+    }
+
+    try {
+      if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+        return next(errorHandler(403, 'You are not allowed to update this product'));
+      }
+
+      const imageUrl = req.file ? `/uploads/${req.file.filename}` : req.body.image;
+
+      const updatedProduct = await Product.findByIdAndUpdate(
+        req.params.productId,
+        {
+          $set: {
+            stock: req.body.stock,
+            price: req.body.price,
+            title: req.body.title,
+            content: req.body.content,
+            category: req.body.category,
+            image: imageUrl,
+          },
+        },
+        { new: true }
+      );
+
+      res.status(200).json(updatedProduct);
+    } catch (error) {
+      next(error);
+    }
+  });
+};
+
+// ✅ ÜRÜNLERİ GETİR
 export const getproducts = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
     const sortDirection = req.query.order === 'asc' ? 1 : -1;
+
     const products = await Product.find({
       ...(req.query.userId && { userId: req.query.userId }),
       ...(req.query.category && { category: req.query.category }),
-      ...(req.query.slug && { slug: req.query.slug }),
+      // ...(req.query.slug && { slug: req.query.slug }),
       ...(req.query.productId && { _id: req.query.productId }),
       ...(req.query.searchTerm && {
         $or: [
@@ -50,7 +121,6 @@ export const getproducts = async (req, res, next) => {
     const totalProducts = await Product.countDocuments();
 
     const now = new Date();
-
     const oneMonthAgo = new Date(
       now.getFullYear(),
       now.getMonth() - 1,
@@ -62,7 +132,7 @@ export const getproducts = async (req, res, next) => {
     });
 
     res.status(200).json({
-        products,
+      products,
       totalProducts,
       lastMonthProducts,
     });
@@ -71,38 +141,41 @@ export const getproducts = async (req, res, next) => {
   }
 };
 
-export const deleteproduct = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-    return next(errorHandler(403, 'You are not allowed to delete this product'));
-  }
-  try {
-    await Product.findByIdAndDelete(req.params.productId);
-    res.status(200).json('The product has been deleted');
-  } catch (error) {
-    next(error);
-  }
-};
 
-export const updateproduct = async (req, res, next) => {
-  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-    return next(errorHandler(403, 'You are not allowed to update this product'));
-  }
+// ✅ ÜRÜN SİL
+// ✅ ÜRÜN SİL
+export const deleteproduct = async (req, res, next) => {
   try {
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.productId,
-      {
-        $set: {
-          stock: req.body.stock,
-          price: req.body.price,
-          title: req.body.title,
-          content: req.body.content,
-          category: req.body.category,
-          image: req.body.image,
-        },
-      },
-      { new: true }
-    );
-    res.status(200).json(updatedProduct);
+    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+      return next(errorHandler(403, 'You are not allowed to delete this product'));
+    }
+
+    // Ürünü veritabanından bul
+    const product = await Product.findById(req.params.productId);
+    if (!product) {
+      return next(errorHandler(404, 'Product not found'));
+    }
+
+    // Ürünün resim dosyasını sil
+    const fileName = path.basename(product.image); // Sadece dosya adını al
+    const imagePath = path.join(__dirname, '..', 'uploads', fileName); // Tam dosya yolunu oluştur
+
+    fs.unlink(imagePath, (err) => {
+      console.log(imagePath,"imagePath")
+      if (err) {
+        console.error('Resim silinirken hata oluştu:');
+        return next(errorHandler(500, 'Image could not be deleted '));
+      }
+
+      // Ürünü veritabanından sil
+      Product.findByIdAndDelete(req.params.productId)
+        .then(() => {
+          res.status(200).json('The product has been deleted');
+        })
+        .catch((error) => {
+          next(error);
+        });
+    });
   } catch (error) {
     next(error);
   }
