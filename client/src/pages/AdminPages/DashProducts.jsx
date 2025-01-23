@@ -71,8 +71,14 @@ export default function DashProducts() {
   };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-      {currentUser.isAdmin && userProducts.length > 0 ? (
+    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar flex flex-col items-center justify-center space-y-5
+    scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700
+     dark:scrollbar-thumb-slate-500'>
+    <Link to={'/create-product'}>
+    <Button  gradientDuoTone="tealToLime">create product</Button>
+    </Link> 
+    
+    {currentUser.isAdmin && userProducts.length > 0 ? (
         <>
           <Table hoverable className='shadow-md'>
             <Table.Head>
