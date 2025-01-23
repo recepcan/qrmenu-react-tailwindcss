@@ -59,20 +59,50 @@ export const create = async (req, res, next) => {
   });
 };
 
-// ✅ ÜRÜN GÜNCELLE
 export const updateproduct = async (req, res, next) => {
-  upload.single('image')(req, res, async (err) => {
+  upload.single("image")(req, res, async (err) => {
     if (err) {
-      return next(errorHandler(500, 'Image upload failed'));
+      return next(errorHandler(500, "Image upload failed"));
     }
 
     try {
       if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-        return next(errorHandler(403, 'You are not allowed to update this product'));
+        return next(errorHandler(403, "You are not allowed to update this product"));
       }
 
-      const imageUrl = req.file ? `/uploads/${req.file.filename}` : req.body.image;
+      // Eski ürünü veritabanından bul
+      const product = await Product.findById(req.params.productId);
+      if (!product) {
+        return next(errorHandler(404, "Product not found"));
+      }
 
+      let imageUrl = product.image; // Varsayılan olarak eski resim kalır
+
+      // Eğer yeni bir resim yüklendiyse
+      if (req.file) {
+        // Yeni resim yolunu belirle
+        imageUrl = `/uploads/${req.file.filename}`;
+
+        // Eski resmi sil
+        if (product.image) {
+          const fileName = path.basename(product.image);
+          const imagePath = path.join(__dirname, "uploads", fileName);
+
+          try {
+            if (fs.existsSync(imagePath)) {
+              fs.unlinkSync(imagePath);
+              console.log("Old image deleted successfully:", imagePath);
+            } else {
+              console.log("Old file not found, skipping delete:", imagePath);
+            }
+          } catch (err) {
+            console.error("Error deleting old image:", err);
+            return next(errorHandler(500, "Old image could not be deleted"));
+          }
+        }
+      }
+
+      // Ürünü güncelle
       const updatedProduct = await Product.findByIdAndUpdate(
         req.params.productId,
         {
@@ -82,7 +112,7 @@ export const updateproduct = async (req, res, next) => {
             title: req.body.title,
             content: req.body.content,
             category: req.body.category,
-            image: imageUrl,
+            image: imageUrl, // Yeni veya eski resim
           },
         },
         { new: true }
@@ -143,39 +173,39 @@ export const getproducts = async (req, res, next) => {
 
 
 // ✅ ÜRÜN SİL
-// ✅ ÜRÜN SİL
 export const deleteproduct = async (req, res, next) => {
   try {
     if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-      return next(errorHandler(403, 'You are not allowed to delete this product'));
+      return next(errorHandler(403, "You are not allowed to delete this product"));
     }
 
     // Ürünü veritabanından bul
     const product = await Product.findById(req.params.productId);
     if (!product) {
-      return next(errorHandler(404, 'Product not found'));
+      return next(errorHandler(404, "Product not found"));
     }
 
     // Ürünün resim dosyasını sil
-    const fileName = path.basename(product.image); // Sadece dosya adını al
-    const imagePath = path.join(__dirname, '..', 'uploads', fileName); // Tam dosya yolunu oluştur
+    if (product.image) {
+      const fileName = path.basename(product.image); 
+      const imagePath = path.join(__dirname, "uploads", fileName);
 
-    fs.unlink(imagePath, (err) => {
-      console.log(imagePath,"imagePath")
-      if (err) {
-        console.error('Resim silinirken hata oluştu:');
-        return next(errorHandler(500, 'Image could not be deleted '));
+      try {
+        if (fs.existsSync(imagePath)) {
+          fs.unlinkSync(imagePath);
+          console.log("Image deleted successfully:", imagePath);
+        } else {
+          console.log("File not found, skipping delete:", imagePath);
+        }
+      } catch (err) {
+        console.error("Error deleting the image:", err);
+        return next(errorHandler(500, "Image could not be deleted"));
       }
+    }
 
-      // Ürünü veritabanından sil
-      Product.findByIdAndDelete(req.params.productId)
-        .then(() => {
-          res.status(200).json('The product has been deleted');
-        })
-        .catch((error) => {
-          next(error);
-        });
-    });
+    // Ürünü veritabanından sil
+    await Product.findByIdAndDelete(req.params.productId);
+    res.status(200).json("The product has been deleted");
   } catch (error) {
     next(error);
   }

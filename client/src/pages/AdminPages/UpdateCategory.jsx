@@ -35,28 +35,37 @@ export default function UpdateCategory() {
  
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
+    // FormData nesnesi oluştur
+    const categoryData = new FormData();
+    categoryData.append('title', formData.title);
+    categoryData.append('name', formData.name);
+  
+    // Yeni resim seçilmişse ekle, seçilmemişse eski resmi koru
+    if (file) {
+      categoryData.append('image', file);
+    } else {
+      categoryData.append('image', formData.image); 
+    }
+  
     try {
       const res = await fetch(`/server/category/updatecategory/${formData._id}/${currentUser._id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: categoryData, // JSON yerine FormData gönder
       });
+  
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.message);
         return;
       }
-
-      if (res.ok) {
-      
-        navigate(`/panel?tab=category`);
-      }
+  
+      navigate(`/panel?tab=category`);
     } catch (error) {
-      toast.error('Something went wrong',error);
+      toast.error('Something went wrong', error);
     }
   };
+  
   return (
     <div className='p-3 w-full bg-black/70  min-h-screen '>
       <h1 className='text-center text-3xl my-7 font-semibold text-white'>Update category</h1>

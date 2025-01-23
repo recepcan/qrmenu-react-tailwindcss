@@ -2,24 +2,14 @@ import { Alert, Button, FileInput, Select, Label,TextInput } from 'flowbite-reac
 import ReactQuill from 'react-quill';
 import {toast} from 'react-toastify'
 import 'react-quill/dist/quill.snow.css';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '../../firebase';
 import { useState } from 'react';
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
 import { useNavigate } from 'react-router-dom';
 
 export default function CreateProduct() {
   const [file, setFile] = useState(null);
-  const [imageUploadProgress, setImageUploadProgress] = useState(null);
-  const [imageUploadError, setImageUploadError] = useState(null);
+ 
   const [formData, setFormData] = useState({});
-  const [publishError, setPublishError] = useState(null);
+  
 
   const navigate = useNavigate();
 
@@ -30,7 +20,7 @@ export default function CreateProduct() {
     e.preventDefault();
     
     if (!formData.title || !formData.price || !formData.stock || !formData.category || !file) {
-      setPublishError('Please fill in all required fields.');
+      toast.error('Please fill in all required fields.');
       return;
     }
   
@@ -54,7 +44,7 @@ export default function CreateProduct() {
         return;
       }
   
-      setPublishError(null);
+     
       navigate(`/panel?tab=products`);
     } catch (error) {
       toast.error('Something went wrong',error);
@@ -132,11 +122,7 @@ export default function CreateProduct() {
         <Button type='submit' gradientMonochrome="success">
           Publish
         </Button>
-        {publishError && (
-          <Alert className='mt-5' color='failure'>
-            {publishError}
-          </Alert>
-        )}
+       
       </form>
     </div>
   );

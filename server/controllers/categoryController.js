@@ -56,26 +56,50 @@ export const create = async (req, res, next) => {
   });
 };
 
-// ✅ ÜRÜN GÜNCELLE
+// ✅ KATEGORİ GÜNCELLEME
 export const updatecategory = async (req, res, next) => {
-  upload.single('image')(req, res, async (err) => {
+  upload.single("image")(req, res, async (err) => {
     if (err) {
-      return next(errorHandler(500, 'Image upload failed'));
+      return next(errorHandler(500, "Image upload failed"));
     }
 
     try {
       if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-        return next(errorHandler(403, 'You are not allowed to update this category'));
+        return next(errorHandler(403, "You are not allowed to update this category"));
       }
 
-      const imageUrl = req.file ? `/uploads/${req.file.filename}` : req.body.image;
+      // Eski kategoriyi bul
+      const category = await Category.findById(req.params.categoryId);
+      if (!category) {
+        return next(errorHandler(404, "Category not found"));
+      }
 
+      let imageUrl = category.image; // Varsayılan olarak eski resim kalır
+
+      // Eğer yeni bir resim yüklenirse
+      if (req.file) {
+        // Eski resmi sil
+        if (category.image) {
+          const fileName = path.basename(category.image); // Dosya adını al
+          const imagePath = path.join(uploadDir, fileName); // Dosya yolunu oluştur
+
+          if (fs.existsSync(imagePath)) {
+            fs.unlinkSync(imagePath);
+            console.log(`Old image deleted: ${imagePath}`);
+          }
+        }
+
+        // Yeni resim yolunu belirle
+        imageUrl = `/uploads/${req.file.filename}`;
+      }
+
+      // Kategoriyi güncelle
       const updatedCategory = await Category.findByIdAndUpdate(
         req.params.categoryId,
         {
           $set: {
             title: req.body.title,
-           name:req.body.name,
+            name: req.body.name,
             image: imageUrl,
           },
         },
@@ -88,6 +112,9 @@ export const updatecategory = async (req, res, next) => {
     }
   });
 };
+
+
+
 
 // ✅ ÜRÜNLERİ GETİR
 export const getcategory = async (req, res, next) => {
@@ -136,39 +163,35 @@ export const getcategory = async (req, res, next) => {
 };
 
 
-// ✅ ÜRÜN SİL
+
+// ✅ KATEGORİ SİLME
 export const deletecategory = async (req, res, next) => {
   try {
     if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-      return next(errorHandler(403, 'You are not allowed to delete this Category'));
+      return next(errorHandler(403, "You are not allowed to delete this Category"));
     }
 
-    // Ürünü veritabanından bul
+    // Kategoriyi bul
     const category = await Category.findById(req.params.categoryId);
     if (!category) {
-      return next(errorHandler(404, 'Category not found'));
+      return next(errorHandler(404, "Category not found"));
     }
 
-    // Ürünün resim dosyasını sil
-    const fileName = path.basename(category.image); // Sadece dosya adını al
-    const imagePath = path.join(__dirname, '..', 'uploads', fileName); // Tam dosya yolunu oluştur
+    // Eğer resim varsa, dosyayı sil
+    if (category.image) {
+      const fileName = path.basename(category.image);
+      const imagePath = path.join(uploadDir, fileName);
 
-    fs.unlink(imagePath, (err) => {
-      console.log(imagePath,"imagePath")
-      if (err) {
-        console.error('Resim silinirken hata oluştu:');
-        return next(errorHandler(500, 'Image could not be deleted '));
+      if (fs.existsSync(imagePath)) {
+        fs.unlinkSync(imagePath);
+        console.log(`Image deleted: ${imagePath}`);
       }
+    }
 
-      // Ürünü veritabanından sil
-      Category.findByIdAndDelete(req.params.categoryId)
-        .then(() => {
-          res.status(200).json('The Category has been deleted');
-        })
-        .catch((error) => {
-          next(error);
-        });
-    });
+    // Kategoriyi veritabanından sil
+    await Category.findByIdAndDelete(req.params.categoryId);
+    res.status(200).json({ message: "The Category has been deleted" });
+
   } catch (error) {
     next(error);
   }
