@@ -1,5 +1,6 @@
 import fs from 'fs';
 import Category from '../models/categoryModel.js';
+import User from '../models/userModel.js';
 import { errorHandler } from '../utils/error.js';
 import multer from 'multer';
 import path from 'path';
@@ -116,30 +117,43 @@ export const updatecategory = async (req, res, next) => {
 
 
 
-// ✅ ÜRÜNLERİ GETİR
+// ✅  CATEGORİLERİ  GETİR
 export const getcategory = async (req, res, next) => {
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;
     const limit = parseInt(req.query.limit) || 9;
     const sortDirection = req.query.order === 'asc' ? 1 : -1;
 
-    const category = await Category.find({
-      ...(req.query.userId && { userId: req.query.userId }),
-    //   ...(req.query.category && { category: req.query.category }),
-      // ...(req.query.slug && { slug: req.query.slug }),
-      ...(req.query.categoryId && { _id: req.query.categoryId }),
+    let userId = null;
+
+    // Eğer `username` parametresi varsa, ilgili `userId` değerini bul
+    if (req.query.username) {
+      const user = await User.findOne({ username: req.query.username });
+      if (user) {
+        userId = user._id;
+      } else {
+        return next(errorHandler(404, "User not found"));
+      }
+    }
+
+    const filter = {
+      ...(userId && { userId }), // Eğer username ile eşleşen userId bulunduysa ekle
+      ...(req.query.userId && { userId: req.query.userId }), // Alternatif olarak doğrudan userId filtreleme
+      ...(req.query.categoryId && { _id: req.query.categoryId }), // categoryId filtreleme
       ...(req.query.searchTerm && {
         $or: [
           { title: { $regex: req.query.searchTerm, $options: 'i' } },
           { content: { $regex: req.query.searchTerm, $options: 'i' } },
         ],
       }),
-    })
+    };
+
+    const category = await Category.find(filter)
       .sort({ updatedAt: sortDirection })
       .skip(startIndex)
       .limit(limit);
 
-    const totalCategory = await Category.countDocuments();
+    const totalCategory = await Category.countDocuments(filter);
 
     const now = new Date();
     const oneMonthAgo = new Date(
@@ -161,6 +175,8 @@ export const getcategory = async (req, res, next) => {
     next(error);
   }
 };
+
+
 
 
 

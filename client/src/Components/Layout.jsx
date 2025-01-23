@@ -19,6 +19,7 @@ import UpdateCategory from '../pages/AdminPages/UpdateCategory'
 import { useSelector } from 'react-redux';
 import CurrentUser from '../pages/CurrentUser';
 import UserProducts from '../pages/UserProducts';
+import Error from './Error';
 
 function Layout() {
     const {currentUser}=useSelector(state=>state.user)
@@ -28,9 +29,9 @@ function Layout() {
     <Router>
     <Routes>
 
-<Route path={`/${currentUser?.username}`} element={<CurrentUser currentUser={currentUser?.username}/>} />
-<Route path={`/${currentUser?.username}/products`} element={<UserProducts currentUser={currentUser?.username}/>} />
-
+    <Route path="/:username" element={<CurrentUser />} />
+    <Route path="/:username/products" element={<UserProducts />} />
+    
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sicak-icecekler" element={<HotDrinks />} />
@@ -51,6 +52,11 @@ function Layout() {
         </Route>
 
         <Route path="/" element={<Home />} />
+
+
+        <Route path="*" element={<Error />} />
+
+       
 
       </Routes>
     </Router>

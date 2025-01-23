@@ -8,13 +8,12 @@ function UserProducts() {
   const { username } = useParams(); // URL'den kullanıcı adını al
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab"); // URL'deki ?tab= kısmını alır
-const {currentUser}=useSelector(state=>state.user)
   const [userProducts, setUserProducts] = useState([]);
-
+  
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`/server/product/getproducts?userId=${currentUser._id}&category=${tab}`);
+        const res = await fetch(`/server/product/getproducts?username=${username}&category=${tab}`);
         const data = await res.json();
       
         setUserProducts(data.products)
@@ -22,14 +21,14 @@ const {currentUser}=useSelector(state=>state.user)
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
+    
       fetchProducts();
-    }
-  }, [currentUser._id]);
+
+  }, [username]);
 
   return (
     <div className="bg-black/70 w-full h-screen  flex flex-col items-center space-y-5">
-    <h2 className="text-xl text-white font-mono"> @{currentUser.username}</h2>
+    <h2 className="text-xl text-white font-mono"> @{username}</h2>
     <h1 className="text-3xl text-white font-mono"> {tab}</h1>
       
       <ul className="md:w-[60%] max-md:w-full flex flex-col space-y-3">

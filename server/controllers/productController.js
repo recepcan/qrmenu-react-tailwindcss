@@ -1,5 +1,7 @@
 import fs from 'fs';
 import Product from '../models/productModel.js';
+import User from '../models/userModel.js';
+
 import { errorHandler } from '../utils/error.js';
 import multer from 'multer';
 import path from 'path';

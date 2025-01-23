@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function CurrentUser() {
 
@@ -9,29 +10,54 @@ function CurrentUser() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
+  const { username } = useParams();
+
+const navigate=useNavigate()
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(`/server/user/username/${username}`);
+        if (!response.ok) {
+          
+          navigate('*')  // Eğer kullanıcı bulunamazsa, 404 sayfasına yönlendir
+        }
+        const data = await response.json();
+        setUserData(data); // Kullanıcıyı bulduğunda verileri state'e set et
+      } catch (error) {
+        toast.error(error);
+       
+      }
+    };
+
+    fetchUser();
+  }, [username]);
+
+
+
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const res = await fetch(`/server/category/getcategory?userId=${currentUser._id}`);
+        const res = await fetch(`/server/category/getcategory?username=${username}`);
         const data = await res.json();
         if (res.ok) {
+          console.log(username)
           setUserCategory(data.category);
           if (data.category.length < 9) {
             setShowMore(false);
           }
         }
       } catch (error) {
-        console.log(error.message);
+        toast.error(error.message);
       }
     };
-    if (currentUser.isAdmin) {
+   
         fetchCategory();
-    }
-  }, [currentUser._id]);
+   
+  }, [username]);
 
   return (
     <div className='bg-black/20 w-full h-screen text-white text-5xl flex flex-col items-center justify-center space-y-20'>
-    <h1> {currentUser.username}</h1>
+    <h1> {username}</h1>
 
     <div className='overflow-auto w-full flex flex-wrap items-center justify-center gap-5'>
     {
