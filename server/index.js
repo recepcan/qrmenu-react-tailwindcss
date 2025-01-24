@@ -9,9 +9,8 @@ import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
-import Product from "./models/productModel.js";
-import Category from "./models/categoryModel.js";
-import User from "./models/userModel.js";
+import homeRoutes from './routes/homeRoutes.js'
+
 
 const app = express();
 
@@ -22,13 +21,13 @@ const connectDB = async () => {
     console.log("MongoDB connected");
 
     // Tüm modellerin indexlerini kaldır
-    await Promise.all([
-      Product.collection.dropIndexes(),
-      Category.collection.dropIndexes(),
-      User.collection.dropIndexes(),
-    ]);
+    // await Promise.all([
+    //   Product.collection.dropIndexes(),
+    //   Category.collection.dropIndexes(),
+    //   User.collection.dropIndexes(),
+    // ]);
 
-    console.log("All indexes dropped successfully");
+    // console.log("All indexes dropped successfully");
 
   } catch (error) {
     console.error("Error:", error);
@@ -52,6 +51,7 @@ app.use('/server/auth', authRoutes);
 app.use('/server/product', productRoutes);
 app.use('/server/user', userRoutes);
 app.use('/server/category', categoryRoutes);
+app.use('/server/home', homeRoutes);
 
 app.use(express.static(path.join(__dirname, '/client/dist')));
 

@@ -18,6 +18,7 @@ import Users from './Users';
 import DashSidebar from './DashSidebar';
 import DashProducts from './DashProducts';
 import DashCategory from './DashCategory';
+import DashHome from './DashHome';
 
 
 
@@ -60,6 +61,8 @@ function Panel() {
       {tab=== 'products' && (<DashProducts/>)}
       {tab=== 'users' && (<Users/>)}
       {tab=== 'category' && (<DashCategory/>)}
+      {tab=== 'home' && (<DashHome/>)}
+      {tab=== '' && (<DashHome/>)}
       </div>
     </div>
   )

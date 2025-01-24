@@ -7,6 +7,7 @@ function CurrentUser() {
 
     const { currentUser } = useSelector((state) => state.user);
   const [userCategory, setUserCategory] = useState([]);
+  const [userhome, setUserHome] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
@@ -55,8 +56,37 @@ const navigate=useNavigate()
    
   }, [username]);
 
+  useEffect(() => {
+    const fetchHome = async () => {
+      try {
+        const res = await fetch(`/server/home/gethome?username=${username}`);
+        const data = await res.json();
+        if (res.ok) {
+          console.log(username)
+          setUserHome(data.home);
+          if (data.home.length < 9) {
+            setShowMore(false);
+          }
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+   
+        fetchHome();
+   
+  }, [username]);
+
   return (
-    <div className='bg-black/20 w-full h-screen text-white text-5xl flex flex-col items-center justify-center space-y-20'>
+    <div 
+    style={{
+      backgroundImage: `url(http://localhost:5000${userhome[0]?.image})`,
+      backgroundSize: "cover", // objectCover yerine doğru kullanım
+      backgroundRepeat: "no-repeat", // Resmin tekrarlanmamasını sağlamak için
+      backgroundPosition: "center", // Ortaya hizalamak için
+    }}
+    className=' w-full h-screen text-white text-5xl flex flex-col object-cover
+    items-center justify-center space-y-20'>
     <h1> {username}</h1>
 
     <div className='overflow-auto w-full flex flex-wrap items-center justify-center gap-5'>

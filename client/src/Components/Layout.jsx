@@ -20,6 +20,8 @@ import { useSelector } from 'react-redux';
 import CurrentUser from '../pages/CurrentUser';
 import UserProducts from '../pages/UserProducts';
 import Error from './Error';
+import CreateHome from '../pages/AdminPages/CreateHome';
+import UpdateHome from '../pages/AdminPages/UpdateHome';
 
 function Layout() {
     const {currentUser}=useSelector(state=>state.user)
@@ -46,9 +48,11 @@ function Layout() {
         <Route element={<OnlyAdminPrivateRoute />}>
          <Route path='/create-product' element={<CreateProduct />} />
          <Route path='/create-category' element={<CreateCategory />} />
+         <Route path='/create-home' element={<CreateHome />} />
 
         <Route path='/update-product/:productId' element={<UpdateProduct />} />
         <Route path='/update-category/:categoryId' element={<UpdateCategory />} />
+        <Route path='/update-home/:homeId' element={<UpdateHome />} />
         </Route>
 
         <Route path="/" element={<Home />} />
