@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-
+import Header from '../Components/Header';
+import { Button } from "flowbite-react";
 function CurrentUser() {
 
     const { currentUser } = useSelector((state) => state.user);
@@ -56,7 +57,76 @@ const navigate=useNavigate()
    
   }, [username]);
 
-  useEffect(() => {
+ 
+
+  return (
+    <div 
+   
+    className='bg-gray-100 w-full h-screen   flex flex-col object-cover 
+    items-center  justify-start sm:space-y-20'>
+    <div className='p-4 w-full flex items-center justify-between bg-gray-200 sticky top-0 left-0'>
+    <div className='flex space-x-3'>
+    <Link to={'/panel'}>
+    <Button gradientDuoTone="tealToLime">
+    Panel
+  </Button>
+  </Link>
+
+    <Link to={'/sign-in'}>
+    <Button  gradientMonochrome="success">
+    SignIn
+  </Button>
+  </Link>
+
+  <Link to={'/sign-up'}>
+  <Button  gradientMonochrome="success">
+    SignUp
+  </Button>
+  </Link>
+    </div>
+
+    <h1 className='text-2xl'>{username}</h1>
+    </div>
+
+    <div className='overflow-auto  w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-center lg:w-[1024px]  gap-5 p-5'>
+    {
+        userCategory.map((ctg,index)=>(
+            <Link to={`products?tab=${ctg.name}`} key={index*2} className='w-full min-h-48'> 
+            
+
+            <div 
+                        key={index}
+                        className='w-full h-full  bg-cover bg-center 
+                        bg-no-repeat rounded-lg border-2 flex items-center justify-center text-center'
+                        style={{
+                          backgroundImage: `url(${`http://localhost:5000${ctg.image}`})`,
+                          objectPosition:'cover'
+                        }}
+                        >
+                        <Link to={`products?tab=${ctg.name}`} key={index}
+                         className=
+             'p-3 bg-black/40  w-full  h-full shadow-lg shadow-black rounded-lg text-white font-extrabold text-xl flex items-center justify-center'>
+                         
+                         {ctg.title}
+                         
+                         </Link>
+                         
+                        </div>
+            
+            
+            </Link>
+        ))
+
+    }</div>
+    </div>
+  )
+}
+
+export default CurrentUser
+
+{
+  /*
+   useEffect(() => {
     const fetchHome = async () => {
       try {
         const res = await fetch(`/server/home/gethome?username=${username}`);
@@ -76,51 +146,13 @@ const navigate=useNavigate()
         fetchHome();
    
   }, [username]);
-
-  return (
-    <div 
-    style={{
+  
+   style={{
       backgroundImage: `url(http://localhost:5000${userhome[0]?.image})`,
       backgroundSize: "cover", // objectCover yerine doğru kullanım
       backgroundRepeat: "no-repeat", // Resmin tekrarlanmamasını sağlamak için
       backgroundPosition: "center", // Ortaya hizalamak için
     }}
-    className=' w-full h-screen text-white text-5xl flex flex-col object-cover
-    items-center justify-center space-y-20'>
-    <h1> {username}</h1>
-
-    <div className='overflow-auto w-full flex flex-wrap items-center justify-center gap-5'>
-    {
-        userCategory.map((ctg,index)=>(
-            <Link to={`products?tab=${ctg.name}`} key={index}> 
-            
-
-            <div 
-                        key={index}
-                        className='sm:w-52  sm:h-52 w-40 h-40 bg-cover bg-center 
-                        bg-no-repeat rounded-lg border-2 flex items-center justify-center text-center'
-                        style={{
-                          backgroundImage: `url(${`http://localhost:5000${ctg.image}`})`,
-                          objectPosition:'cover'
-                        }}
-                        >
-                        <Link to={`products?tab=${ctg.name}`} key={index}
-                         className=
-             'p-3 bg-black/40 sm:w-52 sm:h-52 w-40 h-40 shadow-lg shadow-black rounded-lg text-white font-extrabold text-xl flex items-center justify-center'>
-                         
-                         {ctg.title}
-                         
-                         </Link>
-                         
-                        </div>
-            
-            
-            </Link>
-        ))
-
-    }</div>
-    </div>
-  )
+  
+  */
 }
-
-export default CurrentUser
