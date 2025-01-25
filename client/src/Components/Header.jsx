@@ -16,7 +16,8 @@ function Header() {
   const dynamicUsername =  pathParts[1]; // Eğer params boşsa, URL'den al
   console.log(dynamicUsername)
   return (
-    <div className='w-full flex items-center justify-center space-x-5 text-xl transition-all duration-300  bg-gray-200 dark:bg-gray-600
+    <div className='w-full flex items-center justify-center space-x-5 text-xl
+     transition-all duration-300  bg-black/80 
      font-extrabold tracking-wider p-3 h-16 sm:h-20  absolute top-0 left-0  z-40'>
   <div className=' w-full flex items-center justify-between  '>
       <div className='flex space-x-3'>
@@ -53,7 +54,7 @@ function Header() {
       size='sm'
       gradientDuoTone='purpleToBlue'  
       onClick={()=>dispatch(toggleTheme())}>{theme =='light' ? <FaMoon /> : <IoMdSunny />}</Button>
-      <h1 className='sm:text-2xl text-lg '>@{dynamicUsername}</h1>
+      <h1 className='sm:text-2xl text-lg text-white'>@{dynamicUsername}</h1>
       </div>
       </div>
   

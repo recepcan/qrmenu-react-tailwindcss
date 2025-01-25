@@ -43,19 +43,21 @@ function Panel() {
 
   return (
     <div className='min-h-screen w-full  box-border 
-     border-yellow-400 relative flex  py-20 '>
+     border-yellow-400 relative flex  sm:py-20 py-16 '>
      
 
     {
      
       <div 
-      className={`${adminMenu? 'lg:w-1/5 max-md:flex-1' : 'w-14 '} transition-all duration-200  border-gray-400  min-h-screen `}>
+      className={`${adminMenu? 'lg:w-1/5 max-sm:flex-1' : 'w-14 '} transition-all duration-200  border-gray-400  min-h-screen `}>
       <DashSidebar adminMenu={adminMenu} />
       </div>
     }
 
 
-      <div className={`md:flex-1 ${adminMenu && "max-md:hidden" } w-full min-h-full box-border p-2 max-h-screen overflow-y-auto  dark:bg-gray-900 border-black`} >
+      <div className={`md:flex-1 ${adminMenu && "max-sm:hidden" } w-full 
+        min-h-full box-border p-2 max-h-screen overflow-y-auto  dark:bg-gray-900
+         border-black`} >
       
       
       {tab=== 'products' && (<DashProducts/>)}

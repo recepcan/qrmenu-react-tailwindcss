@@ -106,7 +106,7 @@ function DashSideBar({adminMenu}) {
   // console.log(currentUser.isAdmin)
   return (
     <div className='w-full h-[90%]   shadow-xl shadow-gray-400 transition-all duration-300
-      border-white overflow-hidden  bg-gray-200 dark:bg-gray-600
+      border-white overflow-hidden  bg-gray-200 dark:bg-gray-800
          flex  flex-col justify-between   space-y-5  dark:shadow-none '>
 
 

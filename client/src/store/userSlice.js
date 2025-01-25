@@ -4,7 +4,7 @@ const initialState = {
   currentUser: null,
   error: null,
   loading: false,
-  adminMenu:false
+  adminMenu:true
 };
 
 // Kullanıcı bilgilerini asenkron olarak çekme
