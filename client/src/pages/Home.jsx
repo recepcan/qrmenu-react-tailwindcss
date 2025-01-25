@@ -9,10 +9,8 @@ function Home() {
 
   return (
     <div
-      className="h-screen py-10  bg-cover bg-center bg-no-repeat flex items-center justify-center "
-      style={{
-        backgroundImage: `url(${anaekranfoto})`,
-      }}
+      className="h-screen bg-gray-100 py-10  bg-cover bg-center bg-no-repeat flex items-center justify-center "
+      
     >
     <Header/>
       
