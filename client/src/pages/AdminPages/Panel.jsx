@@ -43,7 +43,7 @@ function Panel() {
 
   return (
     <div className='min-h-screen w-full  box-border 
-     border-yellow-400 relative bg-gray-900 flex p-5  '>
+     border-yellow-400 relative flex  py-20 '>
      
 
     {

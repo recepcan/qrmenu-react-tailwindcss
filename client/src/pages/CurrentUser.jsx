@@ -9,12 +9,14 @@ function CurrentUser() {
     const { currentUser } = useSelector((state) => state.user);
   const [userCategory, setUserCategory] = useState([]);
   const [userhome, setUserHome] = useState([]);
+  const [userdata, setUserData] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
   const { username } = useParams();
-
+console.log(userdata.username)
 const navigate=useNavigate()
+
   useEffect(() => {
     const fetchUser = async () => {
       try {

@@ -50,10 +50,13 @@ export default function CreateCategory() {
     }
   };
   return (
-    <div className='p-3 w-full flex flex-col min-h-screen border-2 bg-black/70'>
-      <h1 className='text-center text-3xl my-7 font-semibold text-white'>Create a category</h1>
-      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-        <div className='flex flex-col gap-4 sm:flex-row justify-between flex-wrap '>
+    <div className='p-3 w-full flex flex-col items-center justify-center  min-h-screen  py-20'>
+      <div className='sm:w-[640px] max-md:w-full p-5 rounded-xl bg-gray-300 dark:bg-gray-800  
+      space-y-8 min-h-[350px]  
+      flex flex-col '>
+      <h1 className='text-center text-3xl  font-semibold '>Create a category</h1>
+      <form className='flex flex-col items-center justify-between   gap-4 h-full space-y-5' onSubmit={handleSubmit}>
+        <div className='flex flex-col gap-4 w-full sm:flex-row  justify-between flex-wrap  '>
           <TextInput
           color="gray"
             type='text'
@@ -79,21 +82,26 @@ export default function CreateCategory() {
          
           
         </div>
-        <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
-          <input
+        <div className='flex w-full gap-4 items-center rounded-xl justify-between border-4 border-teal-500 border-dotted p-3'>
+          <FileInput
+          
             type='file'
             accept='image/*'
-            className='text-white'
+            className='text-white w-full'
             onChange={(e) => setFile(e.target.files[0])}
           />
           
         </div>
        
-        <Button type='submit' gradientMonochrome="success">
+        <Button 
+        type='submit' 
+        gradientMonochrome="success"
+        className='w-full'>
           Publish
         </Button>
        
       </form>
+      </div>
     </div>
   );
 }

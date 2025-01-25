@@ -79,7 +79,7 @@ export default function DashProducts() {
     </Link> 
     
     {currentUser.isAdmin && userProducts.length > 0 ? (
-        <div className='w-full border'>
+        <div className='w-full '>
           <Table hoverable className='shadow-md'>
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>

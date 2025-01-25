@@ -38,24 +38,35 @@ function UserProducts() {
         {userProducts?.map((product,index) => (
          <li
                      key={index}
-                     className={`p-2 dark:shadow-none shadow-md shadow-gray-400 max-md:w-full  flex items-center justify-between space-x-3 border rounded ${
-                       product.stock > 0 ? 'bg-gray-200/85' : 'bg-red-300'
+                     className={`p-2 dark:shadow-none shadow-md shadow-gray-400 max-md:w-full transition-all duration-300  flex items-center justify-between space-x-3 border rounded ${
+                       product.stock > 0 ? 'bg-gray-200/85 dark:bg-gray-700' : 'bg-red-300 dark:bg-red-800'
                      }`}
                    >
                    <div className='w-28 h-28  rounded-lg'>
-                   <img src={`http://localhost:5000${product.image}`} alt="" className='object-cover rounded-lg w-28 h-28'/>
+                   <img 
+                   src={`http://localhost:5000${product.image}`} 
+                    alt="" 
+                   className='object-cover rounded-lg w-28 h-28'/>
                    </div>
                      <div>
-                       <h3 className="text-xl font-semibold">{product.title}</h3>
-                       <div dangerouslySetInnerHTML={{ __html: product?.content }} />
-                       <h4>{product.stock <= 0 && 'Bu ürün geçici olarak hizmette değil!'}</h4>
+                       <h3 
+                       className="text-xl font-semibold">{product.title}</h3>
+                       <div 
+                       dangerouslySetInnerHTML={{ __html: product?.content }} />
+
+                       {
+                       product.stock <= 0 &&
+                       <h4>Bu ürün geçici olarak hizmette değil!</h4>
+                      }
                      </div>
-                     <div className="flex flex-col space-y-2 items-center justify-center ">
-                       <h2 className="p-3 bg-gray-800 text-green-600 rounded-lg font-bold text-xl  font-serif">{product.price}tl</h2>
+                     <div 
+                     className="flex flex-col space-y-2 items-center justify-center ">
+                       <h2 
+                       className="p-3 bg-gray-800 text-green-600 rounded-lg font-bold text-xl  font-serif">{product.price}tl</h2>
                        <button
                          disabled={product.stock <= 0 && true}
-                         
-                         className="text-white bg-sky-600 rounded-lg p-3 w-full flex items-center justify-center text-center text-xl"
+                         className="text-white bg-sky-600 rounded-lg p-3 w-full flex items-center 
+                         justify-center text-center text-xl"
                        >
                          <MdAddShoppingCart />
                        </button>

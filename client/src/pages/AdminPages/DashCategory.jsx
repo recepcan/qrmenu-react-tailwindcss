@@ -80,7 +80,7 @@ export default function DashCategory() {
     </Link>  
     {currentUser.isAdmin && userCategory?.length > 0 ? (
         <div className='w-full'>
-          <Table hoverable className='shadow-md border  w-full'>
+          <Table hoverable className='shadow-md   w-full'>
             <Table.Head>
               <Table.HeadCell>Date updated</Table.HeadCell>
               <Table.HeadCell>category image</Table.HeadCell>

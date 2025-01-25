@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice,createAsyncThunk  } from '@reduxjs/toolkit';
 
 const initialState = {
   currentUser: null,
@@ -7,6 +7,22 @@ const initialState = {
   adminMenu:false
 };
 
+// Kullanıcı bilgilerini asenkron olarak çekme
+export const fetchUserByUsername = createAsyncThunk(
+  "user/fetchUserByUsername",
+  async (username, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`/server/user/username/${username}`);
+      if (!response.ok) {
+        throw new Error("User not found");  // Eğer kullanıcı bulunamazsa hata fırlat
+      }
+      const data = await response.json();
+      return data;  // Redux state'ine aktarılacak olan veriler
+    } catch (error) {
+      return rejectWithValue(error.message);  // Hata mesajını Redux'a ilet
+    }
+  }
+);
 const userSlice = createSlice({
   name: 'user',
   initialState,

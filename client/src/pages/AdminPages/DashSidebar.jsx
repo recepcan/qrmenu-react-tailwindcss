@@ -105,14 +105,16 @@ function DashSideBar({adminMenu}) {
 
   // console.log(currentUser.isAdmin)
   return (
-    <div className='w-full h-[90%]   shadow-xl shadow-gray-400 rounded-xl dark:border-2 border-white overflow-hidden  bg-black/20 
+    <div className='w-full h-[90%]   shadow-xl shadow-gray-400 transition-all duration-300
+      border-white overflow-hidden  bg-gray-200 dark:bg-gray-600
          flex  flex-col justify-between   space-y-5  dark:shadow-none '>
 
 
       <div className='flex flex-col  relative pt-14'>
       <div
       onClick={()=>dispatch(setadminMenu())} 
-      className='text-white   cursor-pointer flex  items-center justify-center rounded-lg text-4xl w-10 h-10 absolute top-2 right-2 '>
+      className=' cursor-pointer flex 
+       items-center justify-center rounded-lg text-4xl w-10 h-10 absolute top-2 right-2 '>
       {
         adminMenu  ? 
        <IoCloseSharp />
@@ -127,7 +129,7 @@ function DashSideBar({adminMenu}) {
              key={index} 
              className={`${tab === item.title && 'dark:text-white  bg-sky-700 dark:bg-sky-500 text-white  font-extrabold'}
                w-full
-               rounded-none p-4 space-x-5  shadow-sm   md:hover:bg-sky-900 md:hover:text-white text-gray-900 dark:text-gray-400
+               rounded-none p-4 space-x-5  shadow-sm   md:hover:bg-sky-900 md:hover:text-white 
                  flex items-center  justify-start    text-xl font-extrabold`}
               to={`/panel?tab=${item.title}`}>
               <div className='text-2xl'>{item.icon}</div>
