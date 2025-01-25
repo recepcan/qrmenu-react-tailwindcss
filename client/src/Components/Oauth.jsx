@@ -6,6 +6,7 @@ import { app } from '../firebase';
 import { signInSuccess } from '../store/userSlice';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { Button } from 'flowbite-react';
 function Oauth() {
     const { error: errorMessage, loading } = useSelector(state => state.user)
     const auth = getAuth(app)
@@ -39,9 +40,16 @@ function Oauth() {
     
 
     return (
-        <button type='button' disabled={loading} onClick={googleAuth} className=' flex items-center justify-center font-bold hover:bg-gradient-to-tr  bg-gradient-to-br  from-yellow-500 via-orange-500 to-red-500 w-full p-2 rounded-lg  text-white hover:bg-sky-500 transition-all'>
-            Countinue with Google  <AiFillGoogleCircle className='w-8 h-8 m-2'  />
-        </button>
+        <Button 
+        size="xl"
+        gradientDuoTone="pinkToOrange" 
+        disabled={loading} 
+        onClick={googleAuth} 
+        className='  font-bold
+        w-full  rounded-lg transition-all'>
+            <h1 className='h-8 p-1 flex items-center justify-center'>Countinue with Google </h1> 
+            <AiFillGoogleCircle className='w-8 h-8 '  />
+        </Button>
     )
 }
 

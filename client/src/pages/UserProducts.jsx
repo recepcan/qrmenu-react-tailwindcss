@@ -27,40 +27,18 @@ function UserProducts() {
   }, [username]);
 
   return (
-    <div className="bg-gray-100 w-full h-screen  flex flex-col items-center space-y-5   ">
+    <div className=" w-full h-screen  flex flex-col items-center space-y-5   ">
     
-    <div className='p-4  w-full flex items-center justify-between bg-gray-200 sticky top-0 left-0'>
-    <div className='flex space-x-3'>
-    <Link to={'/panel'}>
-    <Button gradientDuoTone="tealToLime">
-    Panel
-  </Button>
-  </Link>
-
-    <Link to={'/sign-in'}>
-    <Button  gradientMonochrome="success">
-    SignIn
-  </Button>
-  </Link>
-
-  <Link to={'/sign-up'}>
-  <Button  gradientMonochrome="success">
-    SignUp
-  </Button>
-  </Link>
-    </div>
-
-    <h1 className="text-2xl">@{username}</h1>
-    </div>
+    
 
   
-    <h1 className="text-3xl bg-gray-200 rounded-lg p-2 shadow-md uppercase font-mono"> {tab}</h1>
+    <h1 className="text-3xl bg-gray-200 dark:bg-gray-800 rounded-lg p-2 shadow-md uppercase font-mono"> {tab}</h1>
       
       <ul className="md:w-[60%] max-md:w-full flex flex-col space-y-3 p-5">
         {userProducts?.map((product,index) => (
          <li
                      key={index}
-                     className={`p-2 shadow-md shadow-gray-400 max-md:w-full  flex items-center justify-between space-x-3 border rounded ${
+                     className={`p-2 dark:shadow-none shadow-md shadow-gray-400 max-md:w-full  flex items-center justify-between space-x-3 border rounded ${
                        product.stock > 0 ? 'bg-gray-200/85' : 'bg-red-300'
                      }`}
                    >

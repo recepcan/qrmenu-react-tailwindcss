@@ -22,13 +22,14 @@ import UserProducts from '../pages/UserProducts';
 import Error from './Error';
 import CreateHome from '../pages/AdminPages/CreateHome';
 import UpdateHome from '../pages/AdminPages/UpdateHome';
+import Header from './Header';
 
 function Layout() {
-    const {currentUser}=useSelector(state=>state.user)
-    console.log(currentUser?.username,"currentUser")
+    
   return (
     <div>
-    <Router>
+    
+    <Header/>
     <Routes>
 
     <Route path="/:username" element={<CurrentUser />} />
@@ -63,7 +64,7 @@ function Layout() {
        
 
       </Routes>
-    </Router>
+   
     
     
     </div>

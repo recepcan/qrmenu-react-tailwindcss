@@ -62,31 +62,9 @@ const navigate=useNavigate()
   return (
     <div 
    
-    className='bg-gray-100 w-full h-screen   flex flex-col object-cover 
-    items-center  justify-start sm:space-y-20'>
-    <div className='p-4 w-full flex items-center justify-between bg-gray-200 sticky top-0 left-0'>
-    <div className='flex space-x-3'>
-    <Link to={'/panel'}>
-    <Button gradientDuoTone="tealToLime">
-    Panel
-  </Button>
-  </Link>
-
-    <Link to={'/sign-in'}>
-    <Button  gradientMonochrome="success">
-    SignIn
-  </Button>
-  </Link>
-
-  <Link to={'/sign-up'}>
-  <Button  gradientMonochrome="success">
-    SignUp
-  </Button>
-  </Link>
-    </div>
-
-    <h1 className='text-2xl'>{username}</h1>
-    </div>
+    className=' w-full h-screen   flex flex-col object-cover 
+    items-center  justify-center sm:space-y-20'>
+    
 
     <div className='overflow-auto  w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-center lg:w-[1024px]  gap-5 p-5'>
     {
