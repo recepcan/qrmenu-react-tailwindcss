@@ -27,7 +27,7 @@ function UserProducts() {
   }, [username]);
 
   return (
-    <div className=" w-full h-screen  flex flex-col items-center space-y-5 py-24  ">
+    <div className=" w-full min-h-screen  flex flex-col items-center space-y-5 py-24  ">
     
     
 

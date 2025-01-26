@@ -64,7 +64,7 @@ const navigate=useNavigate()
   return (
     <div 
    
-    className=' w-full h-screen   flex flex-col object-cover 
+    className=' w-full min-h-screen   flex flex-col object-cover 
     items-center  justify-center sm:space-y-20'>
     
 
