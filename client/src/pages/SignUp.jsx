@@ -57,17 +57,20 @@ function SignUp() {
                             <input id='email' onChange={handleChange} className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' type="email" placeholder='email' />
                         </div>
 
-                        <div className='text-sm font-bold'>
+                        <div 
+                            className='text-sm font-bold'>
                             your password
                             <input id='password' onChange={handleChange} className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' type="password" placeholder='password' />
                         </div>
                     </div>
                     <Button
+                        type='submit'
                         outline
                         size="xl"
                         gradientDuoTone="greenToBlue"
                         className='w-full  rounded-lg transition-all'>
-                        SignUp</Button>
+                        SignUp
+                    </Button>
                     <Oauth />
                 </form>
             </div>

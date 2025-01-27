@@ -20,7 +20,7 @@ function SignIn() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!email || !password) {
-            return dispatch(signInFailure(toast.error('Lütfen bütün alanları doldurun')))
+            return toast.error('Lütfen bütün alanları doldurun')
         }
 
         try {
@@ -34,7 +34,7 @@ function SignIn() {
             })
             const data = await res.json()
             if (data.success === false) {
-                dispatch(signInFailure(toast.error(data.message)))
+                toast.error(data.message)
             }
 
             if (res.ok) {
@@ -43,7 +43,7 @@ function SignIn() {
                 navigate('/panel ')
             }
         } catch (error) {
-            dispatch(signInFailure(toast.error(error)))
+          (toast.error(error))
         }
 
 
@@ -68,22 +68,33 @@ function SignIn() {
                    
                     <div className='space-y-3'>
                         <div className='text-sm font-bold'>
-                            your username
-                            <input id='username' onChange={handleChange} className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' type="text" placeholder='username' />
+                            your email
+                            <input 
+                            id='email' 
+                            onChange={handleChange} 
+                            className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' 
+                            type="email" 
+                            placeholder='email' />
                         </div>
                         <div className='text-sm font-bold'>
-                            your email
-                            <input id='email' onChange={handleChange} className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' type="email" placeholder='email' />
+                            your password
+                            <input 
+                            id='password' 
+                            onChange={handleChange} 
+                            className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' 
+                            type="password" placeholder='password' />
                         </div>
 
                         
                     </div>
                     <Button 
+                    type='submit'
                     outline
                     size="xl"
                     gradientDuoTone="greenToBlue" 
                     className='w-full  rounded-lg transition-all'>
-                    SignIn</Button>
+                    SignIn
+                    </Button>
               <Oauth/>
                     </form>
             </div>
