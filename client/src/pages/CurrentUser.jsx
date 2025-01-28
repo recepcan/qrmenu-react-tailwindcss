@@ -14,8 +14,8 @@ function CurrentUser() {
   const [showModal, setShowModal] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
   const { username } = useParams();
-console.log(userdata.username)
-const navigate=useNavigate()
+
+  const navigate=useNavigate()
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -44,7 +44,7 @@ const navigate=useNavigate()
         const res = await fetch(`/server/category/getcategory?username=${username}`);
         const data = await res.json();
         if (res.ok) {
-          console.log(username)
+         
           setUserCategory(data.category);
           if (data.category.length < 9) {
             setShowMore(false);
@@ -64,32 +64,33 @@ const navigate=useNavigate()
   return (
     <div 
    
-    className=' w-full min-h-screen   flex flex-col object-cover 
-    items-center  justify-center sm:space-y-20'>
+    className=' w-full min-h-screen   flex flex-col object-cover py-20
+    items-center  sm:justify-center sm:space-y-20'>
     
+<h1 className='p-3 rounded-xl bg-sky-900 text-white text-2xl'>{username}</h1>
 
     <div className='overflow-auto  w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-center lg:w-[1024px]  gap-5 p-5'>
     {
         userCategory.map((ctg,index)=>(
-            <Link to={`products?tab=${ctg.name}`} key={index*2} className='w-full min-h-48'> 
+            <Link to={`products?tab=${ctg.name}`} key={index*2} className='w-full min-h-48 rounded-lg dark:shadow-none shadow-md shadow-gray-400 bg-gray-200 dark:bg-black/70 '> 
             
 
             <div 
                         key={index}
-                        className='w-full h-full  bg-cover bg-center 
-                        bg-no-repeat rounded-lg border-2 flex items-center justify-center text-center'
-                        style={{
-                          backgroundImage: `url(${`http://localhost:5000${ctg.image}`})`,
-                          objectPosition:'cover'
-                        }}
+                        className='w-full h-full  bg-cover bg-center p-3 space-y-5
+                        bg-no-repeat rounded-lg border-2 flex flex-col items-center justify-center text-center'
+                        
                         >
-                        <Link to={`products?tab=${ctg.name}`} key={index}
+                        <img src={ctg.image}
+                        className='w-36 h-36 rounded-[50%] object-cover'
+                        alt="" />
+                        <h1 key={index}
                          className=
-             'p-3 bg-black/40  w-full  h-full shadow-lg shadow-black rounded-lg text-white font-extrabold text-xl flex items-center justify-center'>
+                        'p-2  w-full bg-sky-900    rounded-lg text-white font-extrabold text-xl flex items-center justify-center'>
                          
                          {ctg.title}
                          
-                         </Link>
+                         </h1>
                          
                         </div>
             

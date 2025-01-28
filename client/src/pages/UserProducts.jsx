@@ -27,7 +27,7 @@ function UserProducts() {
   }, [username]);
 
   return (
-    <div className=" w-full min-h-screen  flex flex-col items-center space-y-5 py-24  ">
+    <div className=" w-full min-h-screen  flex flex-col items-center  space-y-5 py-24  ">
     
     
 
@@ -44,7 +44,7 @@ function UserProducts() {
                    >
                    <div className='w-28 h-28  rounded-lg'>
                    <img 
-                   src={`http://localhost:5000${product.image}`} 
+                   src={product.image} 
                     alt="" 
                    className='object-cover rounded-lg w-28 h-28'/>
                    </div>
