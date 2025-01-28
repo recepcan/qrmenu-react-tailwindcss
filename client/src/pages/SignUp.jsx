@@ -40,7 +40,9 @@ function SignUp() {
                 <div className='flex  items-center justify-center  w-full'>
                     <h1 className='bg-gradient-to-br  from-green-300 via-teal-500 to-green-900  text-white p-5 rounded-2xl sm:text-3xl  text-xl font-bold font-sans'>qr</h1><span className='font-bold md:text-5xl text-2xl font-sans'> menu</span>
                 </div>
-                <h2 className='p-5  text-lg font-bold font-sans text-justify'>This is a demo project. you can sign up with your email and password or with google</h2>
+                <h2 className='p-5  text-lg font-bold font-sans text-justify'>
+                Bu bir qr menu otomasyonudur. Uygulamaya kayıt olarak kendi profilinizi oluşturup ürünlerinizi listeleyebilirsiniz. Uygulamayı şirketinizde kullanılabilir hale gelmesi için üretici tarafından hesabınızın onaylanması gerekmektedir. E-mail veya google ile kayıt olabilirsiniz.
+                </h2>
 
             </div>
             <div className="w-1/2 max-md:w-full  md:h-[600px]   flex items-center justify-center ">

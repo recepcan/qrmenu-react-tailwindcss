@@ -56,7 +56,7 @@ function Layout() {
         <Route path='/update-home/:homeId' element={<UpdateHome />} />
         </Route>
 
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<SignUp />} />
 
 
         <Route path="*" element={<Error />} />
