@@ -67,13 +67,7 @@ function UserProducts() {
                      className="flex flex-col space-y-2 items-center justify-center ">
                        <h2 
                        className="p-3 bg-gray-800 text-green-600 rounded-lg font-bold text-xl  font-serif">{product.price}tl</h2>
-                       <button
-                         disabled={product.stock <= 0 && true}
-                         className="text-white bg-sky-600 rounded-lg p-3 w-full flex items-center 
-                         justify-center text-center text-xl"
-                       >
-                         <MdAddShoppingCart />
-                       </button>
+                       
                      </div>
                    </li>
           
@@ -84,3 +78,14 @@ function UserProducts() {
 }
 
 export default UserProducts;
+
+
+{/*
+  <button
+                         disabled={product.stock <= 0 && true}
+                         className="text-white bg-sky-600 rounded-lg p-3 w-full flex items-center 
+                         justify-center text-center text-xl"
+                       >
+                         <MdAddShoppingCart />
+                       </button>
+  */}
