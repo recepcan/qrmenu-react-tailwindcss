@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { MdAddShoppingCart } from "react-icons/md";
 import { useSelector } from "react-redux";
-import { useSearchParams, useParams, Link } from "react-router-dom"; // useParams import edildi
+import { useSearchParams, useParams, Link, useNavigate } from "react-router-dom"; // useParams import edildi
 import { toast } from "react-toastify";
 import { Button } from "flowbite-react";
+import { IoMdArrowRoundBack } from "react-icons/io";
+
 function UserProducts() {
   const { username } = useParams(); // URL'den kullanıcı adını al
   const [searchParams] = useSearchParams();
   const tab = searchParams.get("tab"); // URL'deki ?tab= kısmını alır
   const [userProducts, setUserProducts] = useState([]);
-  
+  const navigate=useNavigate()
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -31,7 +33,9 @@ function UserProducts() {
     
     
 
-  
+  <button onClick={()=>navigate(-1)} className="w-full px-5">
+  <IoMdArrowRoundBack className="p-2 w-10 h-10 rounded-lg bg-green-600 text-white"/>
+  </button>
     <h1 className="text-3xl bg-gray-200 dark:bg-gray-800 rounded-lg p-2 shadow-md uppercase font-mono"> {tab}</h1>
       
       <ul className="md:w-[60%] max-md:w-full flex flex-col space-y-3 p-5">

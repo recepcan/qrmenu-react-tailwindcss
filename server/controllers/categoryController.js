@@ -40,56 +40,25 @@ export const create = async (req, res, next) => {
 
 // ✅ KATEGORİ GÜNCELLEME
 export const updatecategory = async (req, res, next) => {
-  try {
-    // Kullanıcının admin olup olmadığını kontrol et
-    if (!req.user.isAdmin) {
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
       return next(errorHandler(403, 'You are not allowed to update this category'));
-    }
-
-    // Kategoriyi ID ile bul
-    const category = await Category.findById(req.params.categoryId);
-    if (!category) {
-      return next(errorHandler(404, 'Category not found'));
-    }
-
-    let imageUrl = category.image; // Eski resmin URL'sini al
-
-    // Yeni bir dosya yüklenmişse
-    if (req.file) {
-      // Dosyayı Cloudinary'e yükle
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: 'categories',
-      });
-      imageUrl = result.secure_url; // Yeni resmin URL'sini al
-
-      // Eski resmi sil
-      if (category.image) {
-        const publicId = category.image.split('/').pop().split('.')[0];
-        await cloudinary.uploader.destroy(`categories/${publicId}`);
-      }
-    }
-
-    // Kategoriyi güncelle
-    const updatedCategory = await Category.findByIdAndUpdate(
-      req.params.categoryId,
-      {
-        $set: {
-          title: req.body.title,
-          name: req.body.name,
-          image: imageUrl,
-        },
-      },
-      { new: true }
-    );
-
-    if (!updatedCategory) {
-      return next(errorHandler(404, 'Category update failed'));
-    }
-
-    // Güncellenmiş kategoriyi yanıt olarak döndür
-    res.status(200).json(updatedCategory);
+  }
+  try {
+      const updatedCategory = await Category.findByIdAndUpdate(
+          req.params.categoryId,
+          {
+              $set: {
+                  title: req.body.title,
+                  name: req.body.name,
+                 
+                  image: req.body.image,
+              },
+          },
+          { new: true }
+      );
+      res.status(200).json(updatedCategory);
   } catch (error) {
-    next(error); // Hata durumunda error handler'a yönlendir
+      next(error);
   }
 };
 

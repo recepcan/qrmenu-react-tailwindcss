@@ -40,43 +40,60 @@ export default function UpdateProduct() {
     }
   }, [productId]);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    if (!formData.title || !formData.price || !formData.stock || !formData.category) {
-      toast.error('Please fill in all required fields.');
-      return;
-    }
-  
-    const productData = new FormData();
-    productData.append('title', formData.title);
-    productData.append('price', formData.price);
-    productData.append('stock', formData.stock);
-    productData.append('category', formData.category);
-    productData.append('content', formData.content);
-    
-    console.log(productData,"productData")
-    if (file) {
-      productData.append('image', file);
-    } else {
-      productData.append('image', formData.image); // ✅ Eski resmi koru
+  const handleImageUpload = async () => {
+    if (!file) {
+      toast.error('Please select a file to upload.');
+      return null;
     }
   
     try {
-      const res = await fetch(`/server/product/updateproduct/${formData._id}/${currentUser._id}`, {
-        method: 'PUT',
-        body: productData,  // ✅ JSON.stringify yok
+      const imageData = new FormData();
+      imageData.append('file', file); // Dosyayı FormData'ya ekliyoruz
+      imageData.append('upload_preset', 'products'); // Cloudinary için preset değeri
+  
+      const cloudinaryRes = await fetch('https://api.cloudinary.com/v1_1/dkbg1ejbx/image/upload', {
+        method: 'POST',
+        body: imageData, // FormData gönderimi
       });
   
+      const cloudinaryData = await cloudinaryRes.json();
+  
+      if (!cloudinaryRes.ok) {
+        toast.error('Image upload failed.');
+        return null;
+      }
+  
+      toast.success('Image uploaded successfully!');
+      setFormData({...formData,image:cloudinaryData.secure_url}) // Yüklenen görselin URL'sini döndür
+    } catch (error) {
+      toast.error('Something went wrong during image upload.');
+      console.error(error);
+      return null;
+    }
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`/server/product/updateproduct/${formData._id}/${currentUser._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.message);
         return;
       }
-  
-      navigate(`/panel?tab=products`);
+
+      if (res.ok) {
+       console.log(res)
+        navigate(`/panel?tab=products`);
+      }
     } catch (error) {
-      toast.error(error.message);
+      toast.error('Something went wrong',error.message);
     }
   };
   
@@ -122,7 +139,7 @@ export default function UpdateProduct() {
           />
           <input
             type='text'
-            placeholder='category'
+            placeholder='product'
             required
             id='category'
             className='flex-1 text-black rounded-lg'
@@ -138,12 +155,19 @@ export default function UpdateProduct() {
             accept='image/*'
             onChange={(e) => setFile(e.target.files[0])}
           />
+          <Button
+          gradientMonochrome='info'
+          className='w-full'
+          onClick={handleImageUpload}
+        >
+          Upload Image
+        </Button>
           
         </div>
        
         {formData.image && (
           <img
-            src={`http://localhost:5000${formData.image}`}
+            src={formData.image}
             alt='upload'
             className='w-full h-72 object-contain'
           />

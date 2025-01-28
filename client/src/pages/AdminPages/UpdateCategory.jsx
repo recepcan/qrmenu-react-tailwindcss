@@ -8,6 +8,7 @@ export default function UpdateCategory() {
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({});
   const { categoryId } = useParams();
+console.log(formData,"formdata")
 
   const navigate = useNavigate();
   const { currentUser } = useSelector((state) => state.user);
@@ -32,49 +33,67 @@ export default function UpdateCategory() {
     fetchCategory();
   }, [categoryId]);
 
+  const handleImageUpload = async () => {
+    if (!file) {
+      toast.error('Please select a file to upload.');
+      return null;
+    }
+  
+    try {
+      const imageData = new FormData();
+      imageData.append('file', file); // Dosyayı FormData'ya ekliyoruz
+      imageData.append('upload_preset', 'categories'); // Cloudinary için preset değeri
+  
+      const cloudinaryRes = await fetch('https://api.cloudinary.com/v1_1/dkbg1ejbx/image/upload', {
+        method: 'POST',
+        body: imageData, // FormData gönderimi
+      });
+  
+      const cloudinaryData = await cloudinaryRes.json();
+  
+      if (!cloudinaryRes.ok) {
+        toast.error('Image upload failed.');
+        return null;
+      }
+  
+      toast.success('Image uploaded successfully!');
+      setFormData({...formData,image:cloudinaryData.secure_url}) // Yüklenen görselin URL'sini döndür
+    } catch (error) {
+      toast.error('Something went wrong during image upload.');
+      console.error(error);
+      return null;
+    }
+  };
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!formData.title || !formData.name) {
-      toast.error('Please fill in all required fields.');
-      return;
-    }
-
-    const categoryData = new FormData();
-    categoryData.append('title', formData.title);
-    categoryData.append('name', formData.name);
- console.log(categoryData)
-    // Dosya varsa yeni dosya ekle, yoksa eski resim URL'sini ekle
-    if (file) {
-      categoryData.append('image', file);
-    } else if (formData.image) {
-      categoryData.append('image', formData.image);  // Eski resim URL'sini ekle
-    }
-
-    // FormData'yı kontrol et
-    for (let pair of categoryData.entries()) {
-      console.log(pair[0] + ': ' + pair[1]);
-    }
-    
     try {
       const res = await fetch(`/server/category/updatecategory/${formData._id}/${currentUser._id}`, {
         method: 'PUT',
-        body: categoryData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
-
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.message);
         return;
       }
 
-      toast.success('Category updated successfully!');
-      navigate(`/panel?tab=category`);
+      if (res.ok) {
+       console.log(res)
+        navigate(`/panel?tab=category`);
+      }
     } catch (error) {
-      toast.error('Something went wrong');
-      console.error(error);
+      toast.error('Something went wrong',error.message);
     }
   };
+
+  
+  
+
+
 
   return (
     <div className="p-3 w-full bg-black/70 min-h-screen">
@@ -111,6 +130,13 @@ export default function UpdateCategory() {
             accept="image/*"
             onChange={(e) => setFile(e.target.files[0])}
           />
+          <Button
+          gradientMonochrome='info'
+          className='w-full'
+          onClick={handleImageUpload}
+        >
+          Upload Image
+        </Button>
         </div>
 
         {formData.image && !file && (

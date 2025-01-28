@@ -7,7 +7,7 @@ import multer from 'multer';
 import path from 'path';
 
 
-const __dirname=path.resolve()
+const __dirname = path.resolve()
 // "uploads" klasörü yoksa oluştur
 const uploadDir = 'uploads';
 if (!fs.existsSync(uploadDir)) {
@@ -55,69 +55,28 @@ export const create = async (req, res, next) => {
 
 
 export const updateproduct = async (req, res, next) => {
-  upload.single("image")(req, res, async (err) => {
-    if (err) {
-      return next(errorHandler(500, "Image upload failed"));
-    }
-
-    try {
-      if (!req.user.isAdmin || req.user.id !== req.params.userId) {
-        return next(errorHandler(403, "You are not allowed to update this product"));
-      }
-
-      // Eski ürünü veritabanından bul
-      const product = await Product.findById(req.params.productId);
-      if (!product) {
-        return next(errorHandler(404, "Product not found"));
-      }
-
-      let imageUrl = product.image; // Varsayılan olarak eski resim kalır
-
-      // Eğer yeni bir resim yüklendiyse
-      if (req.file) {
-        // Yeni resim yolunu belirle
-        imageUrl = `/uploads/${req.file.filename}`;
-
-        // Eski resmi sil
-        if (product.image) {
-          const fileName = path.basename(product.image);
-          const imagePath = path.join(__dirname, "uploads", fileName);
-
-          try {
-            if (fs.existsSync(imagePath)) {
-              fs.unlinkSync(imagePath);
-              console.log("Old image deleted successfully:", imagePath);
-            } else {
-              console.log("Old file not found, skipping delete:", imagePath);
-            }
-          } catch (err) {
-            console.error("Error deleting old image:", err);
-            return next(errorHandler(500, "Old image could not be deleted"));
-          }
-        }
-      }
-
-      // Ürünü güncelle
-      const updatedProduct = await Product.findByIdAndUpdate(
-        req.params.productId,
-        {
-          $set: {
-            stock: req.body.stock,
-            price: req.body.price,
-            title: req.body.title,
-            content: req.body.content,
-            category: req.body.category,
-            image: imageUrl, // Yeni veya eski resim
-          },
+  if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    return next(errorHandler(403, 'You are not allowed to update this product'));
+  }
+  try {
+    const updatedProduct = await Product.findByIdAndUpdate(
+      req.params.productId,
+      {
+        $set: {
+          title: req.body.title,
+          content: req.body.content,
+          price: req.body.price,
+          stock: req.body.stock,
+          category: req.body.category,
+          image: req.body.image,
         },
-        { new: true }
-      );
-
-      res.status(200).json(updatedProduct);
-    } catch (error) {
-      next(error);
-    }
-  });
+      },
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    next(error);
+  }
 };
 
 // ✅ ÜRÜNLERİ GETİR
@@ -185,7 +144,7 @@ export const deleteproduct = async (req, res, next) => {
 
     // Ürünün resim dosyasını sil
     if (product.image) {
-      const fileName = path.basename(product.image); 
+      const fileName = path.basename(product.image);
       const imagePath = path.join(__dirname, "uploads", fileName);
 
       try {
