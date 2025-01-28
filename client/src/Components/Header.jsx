@@ -10,12 +10,12 @@ import MobilMenu from './MobilMenu'
 
 function Header() {
   const {theme}=useSelector(state=>state.header)
-  console.log(theme,"theme")
+  
   const dispatch=useDispatch()
   const location = useLocation();
   const pathParts = location.pathname.split("/");
   const dynamicUsername =  pathParts[1]; // Eğer params boşsa, URL'den al
-  console.log(dynamicUsername)
+  
   return (
     <div className='w-full  flex items-center justify-center space-x-5 text-xl
      transition-all duration-300  bg-black/80 

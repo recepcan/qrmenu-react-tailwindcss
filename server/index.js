@@ -10,6 +10,11 @@ import authRoutes from './routes/authRoutes.js'
 import productRoutes from './routes/productRoutes.js'
 import categoryRoutes from './routes/categoryRoutes.js'
 import homeRoutes from './routes/homeRoutes.js'
+import { v2 as cloudinary } from 'cloudinary';
+
+
+
+
 
 
 const app = express();
@@ -45,7 +50,14 @@ app.use(cors({
   credentials: true, // Eğer yetkilendirme cookies kullanıyorsanız
 }));
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use('/server/auth', authRoutes);
 app.use('/server/product', productRoutes);

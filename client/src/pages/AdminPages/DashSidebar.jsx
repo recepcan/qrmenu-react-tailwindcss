@@ -36,7 +36,7 @@ function DashSideBar({adminMenu}) {
       toast.error(error)
     }
   };
-  console.log(tab)
+  
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');

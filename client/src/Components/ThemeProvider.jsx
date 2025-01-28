@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 
 function ThemeProvider({children}) {
     const {theme} =useSelector(state=>state.header)
-    console.log(theme,"")
+    
   return (
     <div className={theme}>
     <div className='  text-black  dark:bg-gray-900 bg-gray-100

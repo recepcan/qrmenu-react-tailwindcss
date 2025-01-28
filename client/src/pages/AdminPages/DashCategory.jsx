@@ -99,11 +99,11 @@ export default function DashCategory() {
                   </Table.Cell>
                   <Table.Cell>
                     
-                      <img
-                        src={`http://localhost:5000${category.image}`}
-                        alt={category.title}
-                        className='w-20 h-10 object-cover bg-gray-500'
-                      />
+                  <img
+                  src={category.image}  // Burada Cloudinary'den gelen URL'yi doğrudan kullanıyoruz
+                  alt={category.title}
+                  className='w-20 h-10 object-cover bg-gray-500'
+                />
                     
                   </Table.Cell>
                   <Table.Cell>
