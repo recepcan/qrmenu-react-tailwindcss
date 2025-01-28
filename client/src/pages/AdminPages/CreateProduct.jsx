@@ -10,44 +10,78 @@ export default function CreateProduct() {
  
   const [formData, setFormData] = useState({});
   
-
+console.log(formData,"formdata")
   const navigate = useNavigate();
 
 
-  
+  const handleImageUpload = async () => {
+    if (!file) {
+      toast.error('Please select a file to upload.');
+      return;
+    }
+
+    try {
+      const imageData = new FormData();
+      imageData.append('file', file);
+      imageData.append('upload_preset', 'products'); // Cloudinary için preset
+
+      const cloudinaryRes = await fetch('https://api.cloudinary.com/v1_1/dkbg1ejbx/image/upload', {
+        method: 'POST',
+        body: imageData,
+      });
+
+      const cloudinaryData = await cloudinaryRes.json();
+      if (!cloudinaryRes.ok) {
+        toast.error('Image upload failed.');
+        return;
+      }
+
+      // Görsel bağlantısını form verisine kaydet
+      setFormData({ ...formData, image: cloudinaryData.secure_url });
+      toast.success('Image uploaded successfully!');
+    } catch (error) {
+      toast.error('Something went wrong during image upload.');
+      console.log(error);
+    }
+  };
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!formData.title || !formData.price || !formData.stock || !formData.category || !file) {
+
+    if (!formData.title || !formData.price ) {
       toast.error('Please fill in all required fields.');
       return;
     }
-  
-    const productData = new FormData();
-    productData.append('title', formData.title);
-    productData.append('price', formData.price);
-    productData.append('stock', formData.stock);
-    productData.append('category', formData.category);
-    productData.append('content', formData.content);
-    productData.append('image', file);
-  
+
     try {
-      const res = await fetch('/server/product/create', {
+      const productData = {
+        title: formData.title,
+        price: formData.price,
+        stock:formData.stock,
+        content:formData.content,
+        image: formData.image,
+        category: formData.category,
+      };
+
+      const res = await fetch(`server/product/create`, {
         method: 'POST',
-        body: productData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(productData),
       });
-  
+
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.message);
         return;
       }
-  
-     
+
+      toast.success('Category created successfully!');
       navigate(`/panel?tab=products`);
     } catch (error) {
-      toast.error('Something went wrong',error);
+      toast.error('Something went wrong during category creation.');
+      console.log(error);
     }
   };
   return (
@@ -114,6 +148,13 @@ export default function CreateProduct() {
           className='text-white w-full'
           onChange={(e) => setFile(e.target.files[0])}
         />
+        <Button
+          gradientMonochrome='info'
+          className='w-full'
+          onClick={handleImageUpload}
+        >
+          Upload Image
+        </Button>
         
       </div>
       <div className='p-3 border w-full rounded-xl'>

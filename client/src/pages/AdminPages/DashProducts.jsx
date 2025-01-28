@@ -91,8 +91,8 @@ export default function DashProducts() {
                 <span>Edit</span>
               </Table.HeadCell>
             </Table.Head>
-            {userProducts.map((product) => (
-              <Table.Body className='divide-y' key={product._id}>
+            {userProducts.map((product,index) => (
+              <Table.Body className='divide-y' key={index}>
                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <Table.Cell>
                     {new Date(product.updatedAt).toLocaleDateString()}
@@ -100,7 +100,7 @@ export default function DashProducts() {
                   <Table.Cell>
                   
                       <img
-                        src={`http://localhost:5000${product.image}`}
+                        src={product.image}
                         alt={product.title}
                         className='w-20 h-10 object-cover bg-gray-500'
                       />

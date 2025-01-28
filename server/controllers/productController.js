@@ -28,38 +28,31 @@ const upload = multer({ storage });
 
 // ✅ ÜRÜN OLUŞTUR
 export const create = async (req, res, next) => {
-  upload.single('image')(req, res, async (err) => {
-    if (err) {
-      return next(errorHandler(500, 'Image upload failed'));
+  try {
+    if (!req.user.isAdmin) {
+      return next(errorHandler(403, 'You are not allowed to create a product'));
+    }
+    if (!req.body.title || !req.body.category || !req.body.image) {
+      return next(errorHandler(400, 'Please provide all required fields'));
     }
 
-    try {
-      if (!req.user.isAdmin) {
-        return next(errorHandler(403, 'You are not allowed to create a product'));
-      }
-      if (!req.body.title || !req.body.content) {
-        return next(errorHandler(400, 'Please provide all required fields'));
-      }
+    const newProduct = new Product({
+      title: req.body.title,
+      price: req.body.price,
+      stock: req.body.stock,
+      category: req.body.category,
+      content: req.body.content,
+      userId: req.user.id,
+      image: req.body.image, // Frontend'den gelen URL'yi kullanıyoruz
+    });
 
-      const imageUrl = req.file ? `/uploads/${req.file.filename}` : '';
-
-      const newProduct = new Product({
-        title: req.body.title,
-        content: req.body.content,
-        price: req.body.price,
-        stock: req.body.stock,
-        category: req.body.category,
-        userId: req.user.id,
-        image: imageUrl,
-      });
-
-      const savedProduct = await newProduct.save();
-      res.status(201).json(savedProduct);
-    } catch (error) {
-      next(error);
-    }
-  });
+    const savedProduct = await newProduct.save();
+    res.status(201).json(savedProduct);
+  } catch (error) {
+    next(error);
+  }
 };
+
 
 export const updateproduct = async (req, res, next) => {
   upload.single("image")(req, res, async (err) => {

@@ -55,6 +55,7 @@ export default function UpdateProduct() {
     productData.append('category', formData.category);
     productData.append('content', formData.content);
     
+    console.log(productData,"productData")
     if (file) {
       productData.append('image', file);
     } else {

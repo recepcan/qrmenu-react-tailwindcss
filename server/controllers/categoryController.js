@@ -41,28 +41,35 @@ export const create = async (req, res, next) => {
 // ✅ KATEGORİ GÜNCELLEME
 export const updatecategory = async (req, res, next) => {
   try {
-    if (!req.user.isAdmin || req.user.id !== req.params.userId) {
+    // Kullanıcının admin olup olmadığını kontrol et
+    if (!req.user.isAdmin) {
       return next(errorHandler(403, 'You are not allowed to update this category'));
     }
 
+    // Kategoriyi ID ile bul
     const category = await Category.findById(req.params.categoryId);
     if (!category) {
       return next(errorHandler(404, 'Category not found'));
     }
 
-    let imageUrl = category.image;
+    let imageUrl = category.image; // Eski resmin URL'sini al
 
-    // Eğer yeni bir image URL'si gelirse
-    if (req.body.image && req.body.image !== category.image) {
-      // Eski resmi Cloudinary'den sil
+    // Yeni bir dosya yüklenmişse
+    if (req.file) {
+      // Dosyayı Cloudinary'e yükle
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'categories',
+      });
+      imageUrl = result.secure_url; // Yeni resmin URL'sini al
+
+      // Eski resmi sil
       if (category.image) {
         const publicId = category.image.split('/').pop().split('.')[0];
         await cloudinary.uploader.destroy(`categories/${publicId}`);
       }
-
-      imageUrl = req.body.image; // Yeni URL'yi al
     }
 
+    // Kategoriyi güncelle
     const updatedCategory = await Category.findByIdAndUpdate(
       req.params.categoryId,
       {
@@ -75,11 +82,18 @@ export const updatecategory = async (req, res, next) => {
       { new: true }
     );
 
+    if (!updatedCategory) {
+      return next(errorHandler(404, 'Category update failed'));
+    }
+
+    // Güncellenmiş kategoriyi yanıt olarak döndür
     res.status(200).json(updatedCategory);
   } catch (error) {
-    next(error);
+    next(error); // Hata durumunda error handler'a yönlendir
   }
 };
+
+
 
 // ✅ KATEGORİ SİLME
 export const deletecategory = async (req, res, next) => {
