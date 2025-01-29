@@ -82,9 +82,10 @@ export default function DashProducts() {
         <div className='w-full '>
           <Table hoverable className='shadow-md'>
             <Table.Head>
-              <Table.HeadCell>Date updated</Table.HeadCell>
-              <Table.HeadCell>product image</Table.HeadCell>
-              <Table.HeadCell>product title</Table.HeadCell>
+              <Table.HeadCell>price</Table.HeadCell>
+              <Table.HeadCell>stock</Table.HeadCell>
+              <Table.HeadCell>image</Table.HeadCell>
+              <Table.HeadCell>title</Table.HeadCell>
               <Table.HeadCell>Category</Table.HeadCell>
               <Table.HeadCell>Delete</Table.HeadCell>
               <Table.HeadCell>
@@ -93,9 +94,14 @@ export default function DashProducts() {
             </Table.Head>
             {userProducts.map((product,index) => (
               <Table.Body className='divide-y' key={index}>
-                <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${product.stock=='0' && 'border border-red-600 dark:border-red-900'}`}>
                   <Table.Cell>
-                    {new Date(product.updatedAt).toLocaleDateString()}
+                    {/*new Date(product.updatedAt).toLocaleDateString() */}
+                    {product.price} tl
+                  </Table.Cell>
+                  <Table.Cell className={` ${product.stock<='10' && 'text-orange-300'}  ${product.stock=='0' && 'text-red-600'} }`}>
+                    
+                    {product.stock}
                   </Table.Cell>
                   <Table.Cell>
                   
