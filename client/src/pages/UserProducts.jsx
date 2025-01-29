@@ -42,21 +42,29 @@ function UserProducts() {
         {userProducts?.map((product,index) => (
          <li
                      key={index}
-                     className={`p-2 dark:shadow-none shadow-md shadow-gray-400 min-h-32
+                     className={`p-2 dark:shadow-none shadow-md shadow-gray-400 min-h-32 max-h-52
                       max-md:w-full transition-all duration-300  flex items-center justify-between space-x-3 border rounded ${
                        product.stock > 0 ? 'bg-gray-200/85 dark:bg-gray-700' : 'bg-red-300 dark:bg-red-800'
                      }`}
                    >
-                   <div className='w-28 h-28  rounded-lg'>
+                   <div className=' sm:w-1/3 w-1/2 max-h-40 overflow-hidden  rounded-lg'>
                    <img 
                    src={product.image} 
                     alt="" 
-                   className='object-cover rounded-lg w-28 h-28'/>
+                   className='object-cover object-center rounded-t-lg w-full h-28'/>
+                   <div 
+                     className="flex flex-col space-y-2 items-center justify-center text-center   ">
+                       <h2 
+                       className="p-3 w-full bg-gray-800 text-green-500 rounded-b-lg font-bold text-xl  font-serif">{product.price}tl</h2>
+                       
+                     </div>
                    </div>
-                     <div>
+                     <div className="sm:w-2/3  w-1/2   p-2 rounded-lg  h-40 
+                     text-justify overflow-y-scroll scrollbar-hide">
                        <h3 
                        className="text-xl font-semibold">{product.title}</h3>
-                       <div 
+                       <p 
+                       className="text-sm"
                        dangerouslySetInnerHTML={{ __html: product?.content }} />
 
                        {
@@ -64,12 +72,7 @@ function UserProducts() {
                        <h4>Bu ürün geçici olarak hizmette değil!</h4>
                       }
                      </div>
-                     <div 
-                     className="flex flex-col space-y-2 items-center justify-center ">
-                       <h2 
-                       className="p-3 bg-gray-800 text-green-600 rounded-lg font-bold text-xl  font-serif">{product.price}tl</h2>
-                       
-                     </div>
+                     
                    </li>
           
         ))}
