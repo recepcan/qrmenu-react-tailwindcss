@@ -69,10 +69,12 @@ function CurrentUser() {
     
 <h1 className='p-3 rounded-xl bg-sky-900 text-white text-2xl'>{username}</h1>
 
-    <div className='overflow-auto  w-full grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-center lg:w-[1024px]  gap-5 p-5'>
+    <div className='overflow-auto  w-full grid grid-cols-1 max-[429px]:px-14 min-[429px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 justify-items-center lg:w-[1024px]  gap-5 p-5'>
     {
         userCategory.map((ctg,index)=>(
-            <Link to={`products?tab=${ctg.name}`} key={index*2} className='w-full min-h-48 rounded-lg dark:shadow-none shadow-md shadow-gray-400 bg-gray-200 dark:bg-black/70 '> 
+            <Link to={`products?tab=${ctg.name}`}
+             key={index*2} 
+            className='w-full min-h-48 rounded-lg dark:shadow-none shadow-md shadow-gray-400 bg-gray-200 dark:bg-black/70 transition-all duration-300'> 
             
 
             <div 

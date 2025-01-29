@@ -42,7 +42,8 @@ function UserProducts() {
         {userProducts?.map((product,index) => (
          <li
                      key={index}
-                     className={`p-2 dark:shadow-none shadow-md shadow-gray-400 max-md:w-full transition-all duration-300  flex items-center justify-between space-x-3 border rounded ${
+                     className={`p-2 dark:shadow-none shadow-md shadow-gray-400 min-h-32
+                      max-md:w-full transition-all duration-300  flex items-center justify-between space-x-3 border rounded ${
                        product.stock > 0 ? 'bg-gray-200/85 dark:bg-gray-700' : 'bg-red-300 dark:bg-red-800'
                      }`}
                    >
