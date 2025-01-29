@@ -15,6 +15,7 @@ function Header() {
   
   const dispatch=useDispatch()
   const location = useLocation();
+
   const pathParts = location.pathname.split("/");
   const dynamicUsername =  pathParts[1]; // Eğer params boşsa, URL'den al
   
@@ -62,8 +63,9 @@ function Header() {
       </div>
   <MobilMenu />
       
-  <div className='w-1/3 flex items-center justify-center'>
-  <h1 className='sm:text-2xl text-lg bg-gradient-to-r bg-clip-text text-transparent from-sky-600 via-purple-600 to-pink-500'>
+  <div className={`w-1/3 flex items-center justify-center  `}>
+  <h1 className={`sm:text-2xl text-lg bg-gradient-to-r bg-clip-text  ${['sign-in', 'sign-up', 'panel'].some(page => pathParts.includes(page)) && 'hidden'}
+  text-transparent from-sky-600 via-purple-600 to-pink-500`}>
   @{dynamicUsername}
   </h1> 
   </div>

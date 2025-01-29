@@ -64,8 +64,8 @@ function CurrentUser() {
   return (
     <div 
    
-    className=' w-full min-h-screen   flex flex-col object-cover py-20
-    items-center  sm:justify-center sm:space-y-20'>
+    className=' w-full min-h-screen   flex flex-col object-cover py-20 sm:py-32
+    items-center   space-y-5'>
     
 <h1 className='p-3 rounded-xl bg-sky-900 text-white text-2xl'>{username}</h1>
 
