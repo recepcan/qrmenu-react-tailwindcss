@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 export default function UpdateProduct() {
   const [file, setFile] = useState(null);
   
+  
   const [formData, setFormData] = useState({});
   
   const { productId } = useParams();
@@ -16,6 +17,26 @@ export default function UpdateProduct() {
   const navigate = useNavigate();
     const { currentUser } = useSelector((state) => state.user);
   
+    const [userCategory, setUserCategory] = useState([]);
+
+    useEffect(() => {
+      const fetchCategory = async () => {
+        try {
+          const res = await fetch(`/server/category/getcategory?userId=${currentUser._id}`);
+          const data = await res.json();
+          if (res.ok) {
+            setUserCategory(data.category);
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      if (currentUser.isAdmin) {
+          fetchCategory();
+      }
+    }, [currentUser._id]);
+
+    console.log(userCategory,"userctg")
     
 
   useEffect(() => {
@@ -137,17 +158,18 @@ export default function UpdateProduct() {
             }
             value={formData.stock}
           />
-          <input
-            type='text'
-            placeholder='product'
-            required
-            id='category'
-            className='flex-1 text-black rounded-lg'
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
+          <Select id="category" 
+        required  
+        value={formData.category}
+        onChange={(e) =>
+          setFormData({ ...formData, category: e.target.value })
+        }>
+            { userCategory?.map((ctg,i)=>(
+              <option key={i} className='text-white'>{ctg.name} </option>
+            ))
+
             }
-            value={formData.category}
-          />
+      </Select>
         </div>
         <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
           <FileInput

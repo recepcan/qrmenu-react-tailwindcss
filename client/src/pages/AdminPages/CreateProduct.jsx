@@ -2,16 +2,38 @@ import { Alert, Button, FileInput, Select, Label,TextInput } from 'flowbite-reac
 import ReactQuill from 'react-quill';
 import {toast} from 'react-toastify'
 import 'react-quill/dist/quill.snow.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 export default function CreateProduct() {
   const [file, setFile] = useState(null);
- 
+ const {currentUser}=useSelector(state=>state.user)
   const [formData, setFormData] = useState({});
-  
+  const [userCategory, setUserCategory] = useState([]);
+
 console.log(formData,"formdata")
   const navigate = useNavigate();
+
+
+    useEffect(() => {
+      const fetchCategory = async () => {
+        try {
+          const res = await fetch(`/server/category/getcategory?userId=${currentUser._id}`);
+          const data = await res.json();
+          if (res.ok) {
+            setUserCategory(data.category);
+          }
+        } catch (error) {
+          console.log(error.message);
+        }
+      };
+      if (currentUser.isAdmin) {
+          fetchCategory();
+      }
+    }, [currentUser._id]);
+
+    console.log(userCategory,"userctg")
 
 
   const handleImageUpload = async () => {
@@ -126,17 +148,19 @@ console.log(formData,"formdata")
           setFormData({ ...formData, stock: e.target.value })
         }
       />
-      <TextInput
-      color="gray"
-      type='text'
-      placeholder='category'
-      required
-      id='category'
-      className='flex-1'
+      
+        <Select id="category" 
+        required  
         onChange={(e) =>
           setFormData({ ...formData, category: e.target.value })
-        }
-        />
+        }>
+            { userCategory?.map((ctg,i)=>(
+              <option key={i} className='text-white'>{ctg.name} </option>
+            ))
+
+            }
+      </Select>
+
        
         
       </div>
