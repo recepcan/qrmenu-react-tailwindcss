@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { FaSignOutAlt, FaUser, FaUsers } from 'react-icons/fa';
 import { MdCreateNewFolder } from "react-icons/md";
 import { BiSolidCategory } from 'react-icons/bi';
+import { CgWebsite } from 'react-icons/cg';
 
 function DashSideBar({ adminMenu }) {
   const location = useLocation();
@@ -63,6 +64,11 @@ function DashSideBar({ adminMenu }) {
         { title: "All Categories", link: "/panel?tab=category" },
         { title: "New Category", link: "/create-category" }
       ]
+    },
+    {
+      title:'My Page',
+      icon:<CgWebsite />,
+      to:currentUser.username
     }
   ];
 
@@ -82,7 +88,7 @@ function DashSideBar({ adminMenu }) {
               className={`${tab === item.title ? 'dark:text-white bg-sky-700 dark:bg-sky-500 text-white font-extrabold' : ''}
                 h-12 border border-gray-500 rounded-lg p-2 space-x-2 shadow-sm md:hover:bg-sky-900 md:hover:text-white
                 flex items-center justify-start text-lg font-extrabold`}
-              to={`/panel?tab=${item.title}`}
+              to={item.to? `/${item.to}` : `/panel?tab=${item.title}`}
             >
               <div className='text-xl'>{item.icon}</div>
               <h1 className={`${adminMenu ? 'visible' : 'hidden'} max-sm:hidden text-sm`}>{item.title}</h1>
@@ -113,11 +119,11 @@ function DashSideBar({ adminMenu }) {
             <FaSignOutAlt />
           </button>
         }
-        <Link to={'/'}>
+        <div  className='max-sm:hidden'>
           <h6 className={`flex ${adminMenu ? 'text-md' : 'hidden'}`}>
             @{currentUser?.email.split("@")[0]}
           </h6>
-        </Link>
+        </div>
       </div>
 
     </div>

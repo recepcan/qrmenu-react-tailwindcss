@@ -184,7 +184,7 @@ console.log(formData,"formdata")
       <ReactQuill
           theme='snow'
           placeholder='Write something...'
-          className='h-72 mb-12 w-full  p-3 '
+          className='h-72 mb-16 w-full  p-3 '
           required
           onChange={(value) => {
             setFormData({ ...formData, content: value });
