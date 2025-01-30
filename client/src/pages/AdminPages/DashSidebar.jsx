@@ -91,7 +91,7 @@ function DashSideBar({ adminMenu }) {
               to={item.to? `/${item.to}` : `/panel?tab=${item.title}`}
             >
               <div className='text-xl'>{item.icon}</div>
-              <h1 className={`${adminMenu ? 'visible' : 'hidden'} max-sm:hidden text-sm`}>{item.title}</h1>
+              <h1 className={`max-sm:hidden text-sm`}>{item.title}</h1>
             </Link>
 
             {/* Dropdown Menü */}
