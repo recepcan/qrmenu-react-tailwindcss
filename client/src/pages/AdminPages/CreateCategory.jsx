@@ -84,13 +84,14 @@ export default function CreateCategory() {
       <div className='sm:w-[640px] max-md:w-full p-5 rounded-xl bg-gray-300 dark:bg-gray-800 space-y-8 min-h-[350px] flex flex-col'>
         <h1 className='text-center text-3xl font-semibold'>Create a category</h1>
 
-        <div className='flex flex-col gap-4 w-full sm:flex-row flex-wrap'>
+        <div className='grid grid-cols-1 xs:grid-cols-2  gap-4 w-full '>
           <TextInput
             type='text'
             placeholder='Title'
             required
             value={formData.title}
             onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+            
           />
           <TextInput
             type='text'
@@ -98,6 +99,7 @@ export default function CreateCategory() {
             required
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            
           />
         </div>
 
@@ -110,7 +112,7 @@ export default function CreateCategory() {
           />
           <Button
           gradientMonochrome='info'
-          className='w-full'
+          
           onClick={handleImageUpload}
         >
           Upload Image

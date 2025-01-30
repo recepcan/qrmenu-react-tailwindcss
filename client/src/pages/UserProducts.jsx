@@ -56,7 +56,7 @@ productStyleColumn?
     
       
       <ul className={` max-md:w-full grid  justify-items-center gap-5  
-      ${productStyleColumn ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-md:w-[75%]' :'lg:w-[80%] md:grid-cols-2'} `}>
+      ${productStyleColumn ? 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 max-md:w-[75%]' :'lg:w-[80%] md:grid-cols-2'} p-5`}>
         {userProducts?.map((product,index) => (
          <li
                      key={index}

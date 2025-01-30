@@ -120,95 +120,99 @@ export default function UpdateProduct() {
   
 
   return (
-    <div className='p-3 w-full bg-black/70  '>
-      <h1 className='text-center text-3xl my-7 font-semibold text-white'>Update product</h1>
-      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-        <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-          <input
-          
-            type='text'
-            placeholder='Title'
-            required
-            id='title'
-            className='flex-1 rounded-lg text-black'
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            value={formData.title}
-          />
-          <input
-            type='text'
-            placeholder='price'
-            required
-            id='price'
-            className='flex-1 text-black rounded-lg'
-            onChange={(e) =>
-              setFormData({ ...formData, price: e.target.value })
-            }
-            value={formData.price}
-          />
-          <input
-            type='text'
-            placeholder='stock'
-            required
-            id='stock'
-            className='flex-1 text-black rounded-lg'
-            onChange={(e) =>
-              setFormData({ ...formData, stock: e.target.value })
-            }
-            value={formData.stock}
-          />
-          <Select id="category" 
-        required  
-        value={formData.category}
-        onChange={(e) =>
-          setFormData({ ...formData, category: e.target.value })
-        }>
-            { userCategory?.map((ctg,i)=>(
-              <option key={i} className='text-white'>{ctg.name} </option>
-            ))
+    <div className='p-3 w-full py-24 flex items-center justify-center'>
+     <div className='max-w-2xl bg-gray-300 dark:bg-gray-800 rounded-xl p-5'>
+     <h1 className='text-center text-3xl my-7 font-semibold text-white'>Update product</h1>
+     <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
+       <div className='grid grid-cols-1 xs:grid-cols-2 flex-col gap-4 sm:flex-row flex-wrap justify-between'>
+         <TextInput
+         
+           type='text'
+           placeholder='Title'
+           required
+           id='title'
+           className='flex-1 rounded-lg text-black'
+           onChange={(e) =>
+             setFormData({ ...formData, title: e.target.value })
+           }
+           value={formData.title}
+         />
+         <TextInput
+           type='text'
+           placeholder='price'
+           required
+           id='price'
+           className='flex-1 text-black rounded-lg'
+           onChange={(e) =>
+             setFormData({ ...formData, price: e.target.value })
+           }
+           value={formData.price}
+         />
+         <TextInput
+           type='text'
+           placeholder='stock'
+           required
+           id='stock'
+           className='flex-1 text-black rounded-lg'
+           onChange={(e) =>
+             setFormData({ ...formData, stock: e.target.value })
+           }
+           value={formData.stock}
+         />
+         <Select id="category" 
+         className='flex-1'
+       required  
+       value={formData.category}
+       onChange={(e) =>
+         setFormData({ ...formData, category: e.target.value })
+       }>
+           { userCategory?.map((ctg,i)=>(
+             <option key={i} className='text-white'>{ctg.name} </option>
+           ))
 
-            }
-      </Select>
-        </div>
-        <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
-          <FileInput
-            type='file'
-            accept='image/*'
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <Button
-          gradientMonochrome='info'
-          className='w-full'
-          onClick={handleImageUpload}
-        >
-          Upload Image
-        </Button>
-          
-        </div>
-       
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt='upload'
-            className='w-full h-72 object-contain'
-          />
-        )}
-        <ReactQuill
-          theme='snow'
-          value={formData.content}
-          placeholder='Write something...'
-          className='h-72 mb-12'
-          required
-          onChange={(value) => {
-            setFormData({ ...formData, content: value });
-          }}
-        />
-        <Button type='submit' gradientDuoTone='purpleToPink'>
-          Update post
-        </Button>
-       
-      </form>
+           }
+     </Select>
+       </div>
+       <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
+         <FileInput
+           type='file'
+           accept='image/*'
+           className='w-full'
+           onChange={(e) => setFile(e.target.files[0])}
+         />
+         <Button
+         gradientMonochrome='info'
+         
+         onClick={handleImageUpload}
+       >
+         Upload Image
+       </Button>
+         
+       </div>
+      
+       {formData.image && (
+         <img
+           src={formData.image}
+           alt='upload'
+           className='w-full h-72 object-contain'
+         />
+       )}
+       <ReactQuill
+         theme='snow'
+         value={formData.content}
+         placeholder='Write something...'
+         className='h-72 mb-16'
+         required
+         onChange={(value) => {
+           setFormData({ ...formData, content: value });
+         }}
+       />
+       <Button type='submit' gradientMonochrome="cyan">
+         Update product
+       </Button>
+      
+     </form>
+     </div>
     </div>
   );
 }

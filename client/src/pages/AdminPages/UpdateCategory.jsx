@@ -1,4 +1,4 @@
-import { Button, FileInput } from 'flowbite-react';
+import { Button, FileInput, TextInput } from 'flowbite-react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -96,11 +96,12 @@ console.log(formData,"formdata")
 
 
   return (
-    <div className="p-3 w-full bg-black/70 min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold text-white">Update Category</h1>
+    <div className="p-3 w-full  min-h-screen py-24 flex items-center justify-center">
+      <div className='border bg-gray-300 dark:bg-gray-800 p-10 rounded-xl max-w-2xl'>
+      <h1 className="text-center text-3xl my-7 font-semibold  ">Update Category</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <input
+          <TextInput
             type="text"
             placeholder="Title"
             required
@@ -111,7 +112,7 @@ console.log(formData,"formdata")
             }
             value={formData.title}
           />
-          <input
+          <TextInput
             type="text"
             placeholder="Name"
             required
@@ -132,7 +133,7 @@ console.log(formData,"formdata")
           />
           <Button
           gradientMonochrome='info'
-          className='w-full'
+          
           onClick={handleImageUpload}
         >
           Upload Image
@@ -151,6 +152,7 @@ console.log(formData,"formdata")
           Update Category
         </Button>
       </form>
+      </div>
     </div>
   );
 }

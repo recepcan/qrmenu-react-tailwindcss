@@ -174,7 +174,6 @@ console.log(formData,"formdata")
         />
         <Button
           gradientMonochrome='info'
-          className='w-full'
           onClick={handleImageUpload}
         >
           Upload Image

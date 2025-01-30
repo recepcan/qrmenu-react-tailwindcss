@@ -64,7 +64,7 @@ function Header() {
   <MobilMenu />
       
   <div className={`w-1/3 flex items-center justify-center  `}>
-  <h1 className={`sm:text-2xl text-lg bg-gradient-to-r bg-clip-text  ${['sign-in', 'sign-up', 'panel','create','update'].some(page => pathParts.includes(page)) && 'hidden'}
+  <h1 className={`sm:text-2xl text-lg bg-gradient-to-r bg-clip-text  ${['sign-in', 'sign-up', 'panel','create-product','update-product','create-category','update-category'].some(page => pathParts.includes(page)) && 'hidden'}
   text-transparent from-sky-600 via-purple-600 to-pink-500`}>
   @{dynamicUsername}
   </h1> 
