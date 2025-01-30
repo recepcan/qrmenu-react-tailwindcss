@@ -10,10 +10,11 @@ import { MdContentPaste, MdCreateNewFolder, MdHomeRepairService } from "react-ic
 import { PiPhoneDisconnectThin } from "react-icons/pi";
 import { IoCloseSharp, IoDocumentText, IoDocumentTextSharp } from "react-icons/io5";
 import { FaImages, FaPhoneFlip } from 'react-icons/fa6';
-import { FaInfoCircle, FaMoon, FaUsers } from 'react-icons/fa';
+import { FaInfoCircle, FaMoon, FaUser, FaUsers } from 'react-icons/fa';
 import { BiSolidCategory, BiSolidSun } from 'react-icons/bi';
 import { BsPersonCircle } from "react-icons/bs";
 import { GrTextWrap } from "react-icons/gr";
+import { CgProfile } from "react-icons/cg";
 
 function DashSideBar({adminMenu}) {
   const location = useLocation();
@@ -49,25 +50,13 @@ function DashSideBar({adminMenu}) {
 
 
   const tabs = [
+    
     {
-      title: "home",
-      icon: <TiHome />
-    },
-    // {
-    //   title: "about",
-    //   icon: <FaInfoCircle />
+      title:'profile',
+      icon:<FaUser />
 
-    // },
-    // {
-    //   title:"publications",
-    //   icon:<IoDocumentTextSharp />
-    // }
-    // ,
-    // {
-    //   title: "services",
-    //   icon: <MdHomeRepairService />
-
-    // },
+    }
+    ,
     {
       title: "products",
       icon: <MdCreateNewFolder />
@@ -80,25 +69,6 @@ function DashSideBar({adminMenu}) {
       title:"category",
       icon:<BiSolidCategory />
     }
-    // {
-    //   title: "texts",
-    //   icon: <GrTextWrap />
-
-    // },
-    // {
-    //   title:"galeri",
-    //   icon:<FaImages />
-
-    // },
-    // {
-    //   title: "contact",
-    //   icon: <FaPhoneFlip />
-    // },
-
-    
-   
-   
-
   ];
 
 

@@ -123,24 +123,30 @@ export const getUsers = async (req, res, next) => {
 // Kullanıcıyı kullanıcı adı ile de sorgulama yapılacak şekilde düzenledik
 export const getUser = async (req, res, next) => {
   try {
+    console.log("Gelen req.params:", req.params); // Debugging için
+
     const { userId, username } = req.params;
     let user;
     
     if (username) {
-      // Username ile sorgulama yap
+      console.log("Username ile sorgulama yapılıyor:", username);
       user = await User.findOne({ username });
     } else {
-      // userId ile sorgulama yap
+      console.log("UserID ile sorgulama yapılıyor:", userId);
       user = await User.findById(userId);
     }
 
     if (!user) {
-      return next(errorHandler(404, 'User not found'));
+      console.log("Kullanıcı bulunamadı!");
+      return next(errorHandler(404, "User not found"));
     }
+
+    console.log("Bulunan kullanıcı:", user);
 
     const { password, ...rest } = user._doc;
     res.status(200).json(rest);
   } catch (error) {
+    console.log("Hata oluştu:", error);
     next(error);
   }
 };

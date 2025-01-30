@@ -122,7 +122,7 @@ export default function UpdateProduct() {
   return (
     <div className='p-3 w-full py-24 flex items-center justify-center'>
      <div className='max-w-2xl bg-gray-300 dark:bg-gray-800 rounded-xl p-5'>
-     <h1 className='text-center text-3xl my-7 font-semibold text-white'>Update product</h1>
+     <h1 className='text-center text-3xl my-7 font-semibold '>Update product</h1>
      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
        <div className='grid grid-cols-1 xs:grid-cols-2 flex-col gap-4 sm:flex-row flex-wrap justify-between'>
          <TextInput
