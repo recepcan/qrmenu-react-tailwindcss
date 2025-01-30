@@ -64,7 +64,8 @@ const productSlice = createSlice({
           { name: 'Fıstık', description: 'Enerji dolu bir seçim.', price: 50, stock: 5 ,img:fıstık},
         ]
       }
-    ]
+    ],
+    productStyleColumn:false
   },
   reducers: {
     increment: (state) => {
@@ -76,8 +77,11 @@ const productSlice = createSlice({
     incrementByAmount: (state, action) => {
       state.value += action.payload;
     },
+    toggleProductStyle:(state,action)=>{
+      state.productStyleColumn=!state.productStyleColumn
+    }
   },
 });
 
-export const { increment, decrement, incrementByAmount } = productSlice.actions;
+export const { increment, decrement, incrementByAmount,toggleProductStyle } = productSlice.actions;
 export default productSlice.reducer;

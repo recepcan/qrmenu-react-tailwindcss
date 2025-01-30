@@ -11,7 +11,11 @@ export default {
   ],
   darkMode: "class",
   theme: {
-    extend: {},
+    extend: {
+      screens: {
+        xs: "400px", // 400px için özel bir 'xs' medya sorgusu oluştur
+      },
+    },
   },
   plugins: [flowbite.plugin(),scrollbarHide],
 };
