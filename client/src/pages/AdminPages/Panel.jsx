@@ -50,7 +50,7 @@ function Panel() {
     {
      
       <div 
-      className={`${adminMenu? '' : ''} w-full h-16 mb-10 transition-all duration-200 border  border-gray-800  `}>
+      className={`${adminMenu? '' : ''} w-full h-16  transition-all duration-200 border  border-gray-800  `}>
       <DashSidebar adminMenu={adminMenu} />
       </div>
     }

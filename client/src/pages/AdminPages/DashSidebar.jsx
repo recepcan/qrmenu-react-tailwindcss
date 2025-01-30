@@ -73,7 +73,7 @@ function DashSideBar({ adminMenu }) {
   ];
 
   return (
-    <div className='w-full h-16 px-5  shadow-xl shadow-gray-400 transition-all duration-300 bg-gray-200 dark:bg-gray-800 flex justify-between space-x-2 dark:shadow-none'>
+    <div className='w-full h-16 px-5  shadow-md shadow-gray-400 transition-all duration-300 bg-gray-200 dark:bg-gray-800 flex justify-between space-x-2 dark:shadow-none'>
 
       {/* Navbar Sol Tarafı */}
       <div className='flex space-x-2 items-center relative'>
@@ -113,13 +113,13 @@ function DashSideBar({ adminMenu }) {
       </div>
 
       {/* Navbar Sağ Tarafı */}
-      <div className="flex flex-row-reverse items-center text-gray-900 dark:text-gray-400 p-2">
+      <div className="flex flex-row-reverse items-center   p-2">
         {location.pathname === '/panel' &&
-          <button onClick={handleSignout} className='text-white bg-red-500 font-semibold p-1 rounded-full'>
+          <button onClick={handleSignout} className=' h-12 border font-semibold p-2 rounded-lg border-gray-500'>
             <FaSignOutAlt />
           </button>
         }
-        <div  className='max-sm:hidden'>
+        <div  className='max-sm:hidden dark:text-gray-400'>
           <h6 className={`flex ${adminMenu ? 'text-md' : 'hidden'}`}>
             @{currentUser?.email.split("@")[0]}
           </h6>
