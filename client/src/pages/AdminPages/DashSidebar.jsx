@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom'
 import { setadminMenu, signoutSuccess } from '../../store/userSlice';
 import { toast } from 'react-toastify';
-import { FaSignOutAlt, FaUser, FaUsers } from 'react-icons/fa';
+import { FaPlus, FaSignOutAlt, FaUser, FaUsers } from 'react-icons/fa';
 import { MdCreateNewFolder } from "react-icons/md";
 import { BiSolidCategory } from 'react-icons/bi';
 import { CgWebsite } from 'react-icons/cg';
@@ -91,7 +91,7 @@ function DashSideBar({ adminMenu }) {
               to={item.to? `/${item.to}` : `/panel?tab=${item.title}`}
             >
               <div className='text-xl'>{item.icon}</div>
-              <h1 className={`max-sm:hidden text-sm`}>{item.title}</h1>
+              <h1 className={`max-md:hidden text-sm`}>{item.title}</h1>
             </Link>
 
             {/* Dropdown Menü */}
@@ -113,17 +113,24 @@ function DashSideBar({ adminMenu }) {
       </div>
 
       {/* Navbar Sağ Tarafı */}
-      <div className="flex flex-row-reverse items-center   p-2">
-        {location.pathname === '/panel' &&
-          <button onClick={handleSignout} className=' h-12 border font-semibold p-2 rounded-lg border-gray-500'>
+      <div className="flex-1 flex flex-row justify-end space-x-2 items-center    p-2">
+      
+      {
+        <Link 
+        to={tab === 'category' ? '/create-category' : '/create-product'} 
+        className={`${tab !== 'category' && tab !== 'products' ? 'hidden' : 'border border-gray-500 p-2 rounded-lg h-12 flex items-center justify-center space-x-2 font-bold hover:bg-green-700'}`}
+      >
+        <FaPlus />
+        <h1 className='max-md:hidden'>{tab === 'category' ? 'Add category' : 'Add product'} </h1>
+      </Link>
+      }
+      
+      {location.pathname === '/panel' &&
+          <button onClick={handleSignout} className='hover:bg-red-600 h-12 border font-semibold p-2 rounded-lg border-gray-500'>
             <FaSignOutAlt />
           </button>
         }
-        <div  className='max-sm:hidden dark:text-gray-400'>
-          <h6 className={`flex ${adminMenu ? 'text-md' : 'hidden'}`}>
-            @{currentUser?.email.split("@")[0]}
-          </h6>
-        </div>
+        
       </div>
 
     </div>
