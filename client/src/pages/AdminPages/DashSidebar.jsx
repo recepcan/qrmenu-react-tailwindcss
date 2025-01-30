@@ -1,28 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, NavLink, useLocation } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { setadminMenu, signoutSuccess } from '../../store/userSlice';
 import { toast } from 'react-toastify';
-import { AiFillLeftCircle, AiOutlineMenu } from 'react-icons/ai';
-import { TiHome } from "react-icons/ti";
-import { FcAbout } from "react-icons/fc";
-import { MdContentPaste, MdCreateNewFolder, MdHomeRepairService } from "react-icons/md";
-import { PiPhoneDisconnectThin } from "react-icons/pi";
-import { IoCloseSharp, IoDocumentText, IoDocumentTextSharp } from "react-icons/io5";
-import { FaImages, FaPhoneFlip } from 'react-icons/fa6';
-import { FaInfoCircle, FaMoon, FaUser, FaUsers } from 'react-icons/fa';
-import { BiSolidCategory, BiSolidSun } from 'react-icons/bi';
-import { BsPersonCircle } from "react-icons/bs";
-import { GrTextWrap } from "react-icons/gr";
-import { CgProfile } from "react-icons/cg";
+import { FaSignOutAlt, FaUser, FaUsers } from 'react-icons/fa';
+import { MdCreateNewFolder } from "react-icons/md";
+import { BiSolidCategory } from 'react-icons/bi';
 
-function DashSideBar({adminMenu}) {
+function DashSideBar({ adminMenu }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
   const [tab, setTab] = useState('home');
-  
-   const handleSignout = async () => {
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(location.search);
+    const tabFromUrl = urlParams.get('tab');
+    if (tabFromUrl) {
+      setTab(tabFromUrl);
+    }
+  }, [location.search]);
+
+  const handleSignout = async () => {
     try {
       const res = await fetch('/server/user/signout', {
         method: 'POST',
@@ -37,99 +37,91 @@ function DashSideBar({adminMenu}) {
       toast.error(error)
     }
   };
-  
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const tabFromUrl = urlParams.get('tab');
-    if (tabFromUrl) {
-      setTab(tabFromUrl);
-      // console.log(tabFromUrl)
-    }
-  }, [location.search]);
-
-
 
   const tabs = [
-    
     {
-      title:'profile',
-      icon:<FaUser />
-
-    }
-    ,
+      title: 'profile',
+      icon: <FaUser />,
+    },
     {
       title: "products",
-      icon: <MdCreateNewFolder />
+      icon: <MdCreateNewFolder />,
+      submenu: [
+        { title: "All Products", link: "/panel?tab=products" },
+        { title: "New Product", link: "/create-product" }
+      ]
     },
     {
-      title:"users",
-      icon:<FaUsers />
+      title: "users",
+      icon: <FaUsers />,
+      
     },
     {
-      title:"category",
-      icon:<BiSolidCategory />
+      title: "category",
+      icon: <BiSolidCategory />,
+      submenu: [
+        { title: "All Categories", link: "/panel?tab=category" },
+        { title: "New Category", link: "/create-category" }
+      ]
     }
   ];
 
-
-
-  // console.log(currentUser.isAdmin)
   return (
-    <div className='w-full h-[90%]   shadow-xl shadow-gray-400 transition-all duration-300
-      border-white overflow-hidden  bg-gray-200 dark:bg-gray-800
-         flex  flex-col justify-between   space-y-5  dark:shadow-none '>
+    <div className='w-full h-16 px-5  shadow-xl shadow-gray-400 transition-all duration-300 bg-gray-200 dark:bg-gray-800 flex justify-between space-x-2 dark:shadow-none'>
 
-
-      <div className='flex flex-col  relative pt-14'>
-      <div
-      onClick={()=>dispatch(setadminMenu())} 
-      className=' cursor-pointer flex 
-       items-center justify-center rounded-lg text-4xl w-10 h-10 absolute top-2 right-2 '>
-      {
-        adminMenu  ? 
-       <IoCloseSharp />
-       :
-       <AiOutlineMenu/>
-      }
-      </div>
-
-        {
-          tabs.map((item, index) => (
+      {/* Navbar Sol Tarafı */}
+      <div className='flex space-x-2 items-center relative'>
+        {tabs.map((item, index) => (
+          <div 
+            key={index} 
+            className="relative"
+            onMouseEnter={() => setOpenDropdown(item.title)}
+            onMouseLeave={() => setOpenDropdown(null)}
+          >
             <Link
-             key={index} 
-             className={`${tab === item.title && 'dark:text-white  bg-sky-700 dark:bg-sky-500 text-white  font-extrabold'}
-               w-full
-               rounded-none p-4 space-x-5  shadow-sm   md:hover:bg-sky-900 md:hover:text-white 
-                 flex items-center  justify-start    text-xl font-extrabold`}
-              to={`/panel?tab=${item.title}`}>
-              <div className='text-2xl'>{item.icon}</div>
-             { 
-              <h1 className={`${adminMenu? 'visible' : 'hidden'}`}>{item.title}</h1>
-            }
+              className={`${tab === item.title ? 'dark:text-white bg-sky-700 dark:bg-sky-500 text-white font-extrabold' : ''}
+                h-12 border border-gray-500 rounded-lg p-2 space-x-2 shadow-sm md:hover:bg-sky-900 md:hover:text-white
+                flex items-center justify-start text-lg font-extrabold`}
+              to={`/panel?tab=${item.title}`}
+            >
+              <div className='text-xl'>{item.icon}</div>
+              <h1 className={`${adminMenu ? 'visible' : 'hidden'} max-sm:hidden text-sm`}>{item.title}</h1>
             </Link>
-          ))
-        }
-        
 
+            {/* Dropdown Menü */}
+            {item.submenu && openDropdown === item.title && (
+              <div className="absolute left-0 top-full  z-40 bg-white dark:bg-gray-800 border rounded-lg shadow-lg w-48">
+                {item.submenu.map((subItem, subIndex) => (
+                  <Link
+                    key={subIndex}
+                    to={subItem.link}
+                    className="block px-4 py-3 rounded-lg text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                  >
+                    {subItem.title}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
 
-      <div className={`flex ${adminMenu? 'flex-row':'flex-col space-y-3'} items-center justify-between text-gray-900 dark:text-gray-400   p-2 `}>
-        {location.pathname == '/panel' &&
-          <button onClick={handleSignout} className='  text-white  bg-red-500  font-semibold p-1 rounded-full'>
-            <AiFillLeftCircle className='text-3xl ' />
+      {/* Navbar Sağ Tarafı */}
+      <div className="flex flex-row-reverse items-center text-gray-900 dark:text-gray-400 p-2">
+        {location.pathname === '/panel' &&
+          <button onClick={handleSignout} className='text-white bg-red-500 font-semibold p-1 rounded-full'>
+            <FaSignOutAlt />
           </button>
         }
-        <Link to={'/'} className='  '>
-          <h6 className={`flex ${adminMenu? 'text-md':'hidden'} `}>
-         @{currentUser?.email.split("@")[0]}
+        <Link to={'/'}>
+          <h6 className={`flex ${adminMenu ? 'text-md' : 'hidden'}`}>
+            @{currentUser?.email.split("@")[0]}
           </h6>
         </Link>
-      {/* <Link  to={`/admin?tab=profile`}>
-       <img src={currentUser?.profilePicture} className='w-8 h-8 object-cover rounded-full ' />
-       </Link> */}
       </div>
 
     </div>
   )
 }
-export default DashSideBar
+
+export default DashSideBar;

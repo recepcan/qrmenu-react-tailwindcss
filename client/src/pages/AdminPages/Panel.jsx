@@ -32,7 +32,7 @@ function Panel() {
   const location = useLocation();
   const dispatch = useDispatch();
   const { currentUser,adminMenu } = useSelector((state) => state.user);
-  const [tab, setTab] = useState('home');
+  const [tab, setTab] = useState('profile');
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const tabFromUrl = urlParams.get('tab');
@@ -44,20 +44,20 @@ function Panel() {
 
   return (
     <div className='min-h-screen w-full  box-border 
-     border-yellow-400 relative flex  sm:py-20 py-16 '>
+     border-yellow-400 relative flex flex-col  sm:py-20 py-16 '>
      
 
     {
      
       <div 
-      className={`${adminMenu? 'lg:w-1/5 max-sm:flex-1' : 'w-14 '} transition-all duration-200  border-gray-400  min-h-screen `}>
+      className={`${adminMenu? '' : ''} w-full h-16 mb-10 transition-all duration-200 border  border-gray-800  `}>
       <DashSidebar adminMenu={adminMenu} />
       </div>
     }
 
 
-      <div className={`md:flex-1 ${adminMenu && "max-sm:hidden" } w-full 
-        min-h-full box-border p-2 max-h-screen overflow-y-auto  dark:bg-gray-900
+      <div className={`md:flex-1  w-full 
+        min-h-full box-border p-2    dark:bg-gray-900
          border-black`} >
       
       
@@ -65,7 +65,7 @@ function Panel() {
       {tab=== 'users' && (<Users/>)}
       {tab=== 'category' && (<DashCategory/>)}
       {tab=== 'profile' && (<Profile/>)}
-      {tab=== '' && (<DashHome/>)}
+      {tab=== '' && (<Profile/>)}
       </div>
     </div>
   )

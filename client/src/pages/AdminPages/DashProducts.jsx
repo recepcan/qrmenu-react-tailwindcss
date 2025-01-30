@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { toast } from 'react-toastify';
 
 export default function DashProducts() {
   const { currentUser } = useSelector((state) => state.user);
@@ -22,7 +23,7 @@ export default function DashProducts() {
           }
         }
       } catch (error) {
-        console.log(error.message);
+        toast.error(error.message);
       }
     };
     if (currentUser.isAdmin) {
@@ -71,15 +72,17 @@ export default function DashProducts() {
   };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar flex flex-col items-center justify-center space-y-5
-    scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700
-     dark:scrollbar-thumb-slate-500'>
-    <Link to={'/create-product'}>
-    <Button  gradientDuoTone="tealToLime">create product</Button>
-    </Link> 
+    <div className='  cursor-all-scroll md:mx-auto p-3 
+     flex flex-col items-center justify-center space-y-5
+     scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
+      dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
+   '>
+   <div>
+   total products: {userProducts.length}
+    </div>
     
     {currentUser.isAdmin && userProducts.length > 0 ? (
-        <div className='w-full '>
+        <div className='w-full overflow-x-auto '>
           <Table hoverable className='shadow-md'>
             <Table.Head>
               <Table.HeadCell>price</Table.HeadCell>
@@ -93,7 +96,7 @@ export default function DashProducts() {
               </Table.HeadCell>
             </Table.Head>
             {userProducts.map((product,index) => (
-              <Table.Body className='divide-y' key={index}>
+              <Table.Body className=' ' key={index}>
                 <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${product.stock=='0' && 'border border-red-600 dark:border-red-900'}`}>
                   <Table.Cell>
                     {/*new Date(product.updatedAt).toLocaleDateString() */}
@@ -142,12 +145,13 @@ export default function DashProducts() {
             ))}
           </Table>
           {showMore && (
-            <button
+            <Button 
+            gradientDuoTone='greenToBlue'
               onClick={handleShowMore}
-              className='w-full text-teal-500 self-center text-sm py-7'
+              className='w-full self-center text-sm py-2'
             >
               Show more
-            </button>
+            </Button>
           )}
         </div>
       ) : (
