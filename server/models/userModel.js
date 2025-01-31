@@ -25,9 +25,36 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isOwner: {
+      type: Boolean,
+      default: false, // Varsayılan olarak false
+    },
   },
   { timestamps: true }
 );
+
+// **Kaydetmeden önce `isOwner` alanı eksikse false yap**
+userSchema.pre('save', function (next) {
+  if (this.isOwner === undefined) {
+    this.isOwner = false;
+  }
+  next();
+});
+
+// **Update işlemlerinde de isOwner eksikse ekle**
+userSchema.pre('findOneAndUpdate', function (next) {
+  if (this._update.isOwner === undefined) {
+    this._update.isOwner = false;
+  }
+  next();
+});
+
+userSchema.pre('updateOne', function (next) {
+  if (this._update.isOwner === undefined) {
+    this._update.isOwner = false;
+  }
+  next();
+});
 
 const User = mongoose.model('User', userSchema);
 

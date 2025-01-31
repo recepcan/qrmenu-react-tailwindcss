@@ -4,6 +4,9 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import path from 'path'
+import Product from './models/productModel.js';
+import User from './models/userModel.js';
+import Category from './models/categoryModel.js';
 
 import userRoutes from './routes/userRoutes.js'
 import authRoutes from './routes/authRoutes.js'
@@ -26,13 +29,13 @@ const connectDB = async () => {
     console.log("MongoDB connected");
 
     // Tüm modellerin indexlerini kaldır
-    // await Promise.all([
-    //   Product.collection.dropIndexes(),
-    //   Category.collection.dropIndexes(),
-    //   User.collection.dropIndexes(),
-    // ]);
+    await Promise.all([
+      Product.collection.dropIndexes(),
+      Category.collection.dropIndexes(),
+      User.collection.dropIndexes(),
+    ]);
 
-    // console.log("All indexes dropped successfully");
+    console.log("All indexes dropped successfully");
 
   } catch (error) {
     console.error("Error:", error);

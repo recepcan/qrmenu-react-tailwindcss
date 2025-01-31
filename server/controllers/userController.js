@@ -6,10 +6,13 @@ export const test = (req, res) => {
   res.json({ message: 'API is working!' });
 };
 
+
+
 export const updateUser = async (req, res, next) => {
   if (req.user.id !== req.params.userId) {
     return next(errorHandler(403, 'You are not allowed to update this user'));
   }
+
   try {
     if (req.body.password) {
       if (req.body.password.length < 6) {
@@ -20,9 +23,7 @@ export const updateUser = async (req, res, next) => {
 
     if (req.body.username) {
       if (req.body.username.length < 7 || req.body.username.length > 20) {
-        return next(
-          errorHandler(400, 'Username must be between 7 and 20 characters')
-        );
+        return next(errorHandler(400, 'Username must be between 7 and 20 characters'));
       }
       if (req.body.username.includes(' ')) {
         return next(errorHandler(400, 'Username cannot contain spaces'));
@@ -31,13 +32,20 @@ export const updateUser = async (req, res, next) => {
         return next(errorHandler(400, 'Username must be lowercase'));
       }
       if (!req.body.username.match(/^[a-zA-Z0-9]+$/)) {
-        return next(
-          errorHandler(400, 'Username can only contain letters and numbers')
-        );
+        return next(errorHandler(400, 'Username can only contain letters and numbers'));
       }
     }
 
-    // User'ı güncelle
+    // Kullanıcıyı önce veritabanından al
+    const existingUser = await User.findById(req.params.userId);
+    if (!existingUser) {
+      return next(errorHandler(404, 'User not found'));
+    }
+
+    // isOwner değeri request içinde varsa onu kullan, yoksa mevcut değeri veya false ekle
+    const isOwnerValue = req.body.isOwner !== undefined ? req.body.isOwner : existingUser.isOwner ?? false;
+
+    // Kullanıcıyı güncelle
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       {
@@ -46,10 +54,15 @@ export const updateUser = async (req, res, next) => {
           email: req.body.email,
           profilePicture: req.body.profilePicture,
           password: req.body.password,
+          isOwner: isOwnerValue, // Eksikse false olarak eklendi
         },
       },
       { new: true }
     );
+
+    if (!updatedUser) {
+      return next(errorHandler(404, 'User update failed'));
+    }
 
     const { password, ...rest } = updatedUser._doc;
     res.status(200).json(rest);

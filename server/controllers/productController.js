@@ -117,10 +117,21 @@ export const getproducts = async (req, res, next) => {
       .limit(limit);
 
     const totalProducts = await Product.countDocuments(filter);
+    const now = new Date();
+    const oneMonthAgo = new Date(
+      now.getFullYear(),
+      now.getMonth() - 1,
+      now.getDate()
+    );
+
+    const lastMonthProducts = await Product.countDocuments({
+      createdAt: { $gte: oneMonthAgo },
+    });
 
     res.status(200).json({
       products,
       totalProducts,
+      lastMonthProducts
     });
   } catch (error) {
     next(error);
