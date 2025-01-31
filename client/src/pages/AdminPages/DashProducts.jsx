@@ -16,7 +16,15 @@ export default function DashProducts() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch(`/server/product/getproducts?userId=${currentUser._id}`);
+        let res =null
+        if(currentUser.isOwner )  
+           { 
+            res = await fetch('/server/product/getproducts');       
+           }
+          else {
+            res = await fetch(`/server/product/getproducts?userId=${currentUser._id}`);
+          } 
+       
         const data = await res.json();
         if (res.ok) {
           setUserProducts(data.products);
@@ -37,9 +45,16 @@ export default function DashProducts() {
   const handleShowMore = async () => {
     const startIndex = userProducts.length;
     try {
-      const res = await fetch(
-        `/server/product/getproducts?userId=${currentUser._id}&startIndex=${startIndex}`
-      );
+      
+      let res =null
+        if(currentUser.isOwner )  
+           { 
+            res = await fetch(`/server/product/getproducts?startIndex=${startIndex}`);
+          }
+          else {
+            res = await fetch(`/server/product/getproducts?userId=${currentUser._id}&startIndex=${startIndex}`);
+          } 
+       
       const data = await res.json();
       if (res.ok) {
         setUserProducts((prev) => [...prev, ...data.products]);
@@ -88,6 +103,7 @@ export default function DashProducts() {
         <div className='w-full overflow-x-auto '>
           <Table hoverable className='shadow-md'>
             <Table.Head>
+              <Table.HeadCell>user</Table.HeadCell>
               <Table.HeadCell>price</Table.HeadCell>
               <Table.HeadCell>stock</Table.HeadCell>
               <Table.HeadCell>image</Table.HeadCell>
@@ -101,7 +117,12 @@ export default function DashProducts() {
             {userProducts.map((product,index) => (
               <Table.Body className=' ' key={index}>
                 <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${product.stock=='0' && 'border border-red-600 dark:border-red-900'}`}>
-                  <Table.Cell>
+                <Table.Cell>
+                {/*new Date(product.updatedAt).toLocaleDateString() */}
+                {product.username} 
+              </Table.Cell>
+
+                <Table.Cell>
                     {/*new Date(product.updatedAt).toLocaleDateString() */}
                     {product.price} tl
                   </Table.Cell>

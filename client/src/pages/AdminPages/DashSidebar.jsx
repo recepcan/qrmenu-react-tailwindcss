@@ -52,11 +52,8 @@ function DashSideBar({ adminMenu }) {
         { title: "New Product", link: "/create-product" }
       ]
     },
-    {
-      title: "users",
-      icon: <FaUsers />,
-      
-    },
+    currentUser?.isOwner && 
+    { title: "users", icon: <FaUsers /> },
     {
       title: "category",
       icon: <BiSolidCategory />,
@@ -70,7 +67,7 @@ function DashSideBar({ adminMenu }) {
       icon:<CgWebsite />,
       to:currentUser.username
     }
-  ];
+  ].filter(Boolean);
 
   return (
     <div className='w-full h-16 px-5  shadow-md shadow-gray-400 transition-all duration-300 bg-gray-200 dark:bg-gray-800 flex justify-between space-x-2 dark:shadow-none'>
@@ -90,7 +87,7 @@ function DashSideBar({ adminMenu }) {
                 flex items-center justify-start text-lg font-extrabold`}
               to={item.to? `/${item.to}` : `/panel?tab=${item.title}`}
             >
-              <div className='text-xl'>{item.icon}</div>
+              <div className={`text-xl `}>{item.icon}</div>
               <h1 className={`max-md:hidden text-sm`}>{item.title}</h1>
             </Link>
 

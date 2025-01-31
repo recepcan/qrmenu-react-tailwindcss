@@ -28,7 +28,9 @@ export const create = async (req, res, next) => {
       title: req.body.title,
       name: req.body.name,
       userId: req.user.id,
+      username: req.user.username,
       image: req.body.image, // Frontend'den gelen URL'yi kullanıyoruz
+      
     });
 
     const savedCategory = await newCategory.save();
@@ -50,7 +52,7 @@ export const updatecategory = async (req, res, next) => {
               $set: {
                   title: req.body.title,
                   name: req.body.name,
-                 
+                 username:req.user.username,
                   image: req.body.image,
               },
           },

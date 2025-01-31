@@ -1,33 +1,32 @@
-import User from '../models/userModel.js';
-import bcryptjs from 'bcryptjs';
-import { errorHandler } from '../utils/error.js';
-import jwt from 'jsonwebtoken';
+import User from "../models/userModel.js";
+import bcryptjs from "bcryptjs";
+import { errorHandler } from "../utils/error.js";
+import jwt from "jsonwebtoken";
 
 export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
 
-  if (
-    !username ||
-    !email ||
-    !password ||
-    username === '' ||
-    email === '' ||
-    password === ''
-  ) {
-    next(errorHandler(400, 'All fields are required'));
+  if (!username || !email || !password) {
+    return next(errorHandler(400, "All fields are required"));
   }
 
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-
-  const newUser = new User({
-    username,
-    email,
-    password: hashedPassword,
-  });
-
   try {
+    // Email adresinin zaten kayıtlı olup olmadığını kontrol et
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return next(errorHandler(400, "Email already in use"));
+    }
+
+    const hashedPassword = bcryptjs.hashSync(password, 10);
+
+    const newUser = new User({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
     await newUser.save();
-    res.json('Signup successful');
+    res.status(201).json({ message: "Signup successful" });
   } catch (error) {
     next(error);
   }
@@ -36,30 +35,41 @@ export const signup = async (req, res, next) => {
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
 
-  if (!email || !password || email === '' || password === '') {
-    next(errorHandler(400, 'All fields are required'));
+  if (!email || !password) {
+    return next(errorHandler(400, "All fields are required"));
   }
 
   try {
     const validUser = await User.findOne({ email });
     if (!validUser) {
-      return next(errorHandler(404, 'User not found'));
+      return next(errorHandler(404, "User not found"));
     }
+
     const validPassword = bcryptjs.compareSync(password, validUser.password);
     if (!validPassword) {
-      return next(errorHandler(400, 'Invalid password'));
+      return next(errorHandler(400, "Invalid password"));
     }
+
+    // JWT Token oluşturuluyor ve username bilgisi ekleniyor
     const token = jwt.sign(
-      { id: validUser._id, isAdmin: validUser.isAdmin },
-      process.env.JWT_SECRET
+      { 
+        id: validUser._id, 
+        isAdmin: validUser.isAdmin, 
+        isOwner: validUser.isOwner,
+        username: validUser.username  // Burada username ekleniyor
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "3d" } // Token süresi belirlendi
     );
 
     const { password: pass, ...rest } = validUser._doc;
 
     res
       .status(200)
-      .cookie('access_token', token, {
+      .cookie("access_token", token, {
         httpOnly: true,
+        secure: process.env.NODE_ENV === "production", // Production ortamında secure flag'i aktif
+        sameSite: "strict",
       })
       .json(rest);
   } catch (error) {
@@ -67,49 +77,79 @@ export const signin = async (req, res, next) => {
   }
 };
 
+
 export const google = async (req, res, next) => {
   const { email, name, googlePhotoUrl } = req.body;
+
   try {
-    const user = await User.findOne({ email });
+    let user = await User.findOne({ email });
+
     if (user) {
+      // Eğer kullanıcı zaten varsa, token'a username ekliyoruz
       const token = jwt.sign(
-        { id: user._id, isAdmin: user.isAdmin },
-        process.env.JWT_SECRET
+        { 
+          id: user._id, 
+          isAdmin: user.isAdmin, 
+          isOwner: user.isOwner,
+          username: user.username  // Burada username ekleniyor
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "3d" }
       );
       const { password, ...rest } = user._doc;
-      res
+      return res
         .status(200)
-        .cookie('access_token', token, {
+        .cookie("access_token", token, {
           httpOnly: true,
-        })
-        .json(rest);
-    } else {
-      const generatedPassword =
-        Math.random().toString(36).slice(-8) +
-        Math.random().toString(36).slice(-8);
-      const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
-      const newUser = new User({
-        username:
-          name.toLowerCase().split(' ').join('') +
-          Math.random().toString(9).slice(-4),
-        email,
-        password: hashedPassword,
-        profilePicture: googlePhotoUrl,
-      });
-      await newUser.save();
-      const token = jwt.sign(
-        { id: newUser._id, isAdmin: newUser.isAdmin },
-        process.env.JWT_SECRET
-      );
-      const { password, ...rest } = newUser._doc;
-      res
-        .status(200)
-        .cookie('access_token', token, {
-          httpOnly: true,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "strict",
         })
         .json(rest);
     }
+
+    const generatedPassword =
+      Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
+    const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
+
+    // Kullanıcı adı oluşturma, özel karakterleri kaldır
+    const cleanUsername = name
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "") // Kullanıcı adındaki özel karakterleri kaldırıyoruz
+      .slice(0, 15) + Math.random().toString(9).slice(-4); // Benzersiz hale getirmek için rastgele bir ek ekliyoruz
+
+    const newUser = new User({
+      username: cleanUsername,
+      email,
+      password: hashedPassword,
+      profilePicture: googlePhotoUrl,
+    });
+
+    await newUser.save();
+
+    // Yeni kullanıcı için token oluşturuluyor, username bilgisi ekleniyor
+    const token = jwt.sign(
+      { 
+        id: newUser._id, 
+        isAdmin: newUser.isAdmin, 
+        isOwner: newUser.isOwner,
+        username: newUser.username  // Burada username ekleniyor
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "3d" }
+    );
+
+    const { password, ...rest } = newUser._doc;
+
+    res
+      .status(200)
+      .cookie("access_token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      })
+      .json(rest);
   } catch (error) {
     next(error);
   }
 };
+

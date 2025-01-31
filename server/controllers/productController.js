@@ -43,6 +43,7 @@ export const create = async (req, res, next) => {
       category: req.body.category,
       content: req.body.content,
       userId: req.user.id,
+      username: req.user.username,
       image: req.body.image, // Frontend'den gelen URL'yi kullanıyoruz
     });
 
@@ -69,6 +70,7 @@ export const updateproduct = async (req, res, next) => {
           stock: req.body.stock,
           category: req.body.category,
           image: req.body.image,
+          username:req.user.username
         },
       },
       { new: true }

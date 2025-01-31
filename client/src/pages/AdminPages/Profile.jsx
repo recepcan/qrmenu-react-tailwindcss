@@ -37,7 +37,15 @@ function Profile() {
     };
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/server/product/getproducts?limit=5');
+        let res =null
+        if(currentUser.isOwner )  
+           { 
+            res = await fetch('/server/product/getproducts?limit=5');       
+           }
+          else {
+            res = await fetch(`/server/product/getproducts?userId=${currentUser._id}`);
+          } 
+       
         const data = await res.json();
         if (res.ok) {
           setProducts(data.products);
@@ -51,7 +59,15 @@ function Profile() {
 
     const fetchCategory = async () => {
       try {
-        const res = await fetch('/server/category/getcategory?limit=5');
+        let res =null
+        if(currentUser.isOwner )  
+           { 
+            res = await fetch('/server/category/getcategory?limit=5');       
+           }
+          else {
+            res = await fetch(`/server/category/getcategory?userId=${currentUser._id}`);
+          } 
+       
         const data = await res.json();
         if (res.ok) {
           setCategory(data.category);
@@ -118,9 +134,11 @@ function Profile() {
       <div className="flex-1   border-gray-500">
       
   <div className='px-3 md:mx-auto '>
-      <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 justify-center'>
+      <div className={`grid grid-cols-1  lg:grid-cols-2 ${currentUser.isOwner && 'xl:grid-cols-3'}   gap-4 justify-items-center`}>
 
-        <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 dark:border border-gray-400  w-full rounded-md shadow-md shadow-gray-400 dark:shadow-none'>
+      {currentUser.isOwner ?
+      
+      <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 dark:border border-gray-400  w-full rounded-md shadow-md shadow-gray-400 dark:shadow-none'>
           <div className='flex justify-between'>
             <div className=''>
               <h3 className='text-gray-500 text-md uppercase'>Total Users</h3>
@@ -135,7 +153,7 @@ function Profile() {
             </span>
             <div className='text-gray-500'>Last month</div>
           </div>
-        </div>
+        </div> : ''}
 
         <div className='flex flex-col p-3 dark:bg-slate-800 gap-4 dark:border border-gray-400 w-full rounded-md shadow-md shadow-gray-400 dark:shadow-none'>
           <div className='flex justify-between'>
@@ -175,10 +193,11 @@ function Profile() {
 
       </div>
 
-      <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 py-3  justify-center'>
+      <div className={`grid grid-cols-1 lg:grid-cols-2 ${currentUser?.isOwner &&'xl:grid-cols-3'} gap-4 py-3  justify-center`}>
 
         
-      <div className='flex flex-col w-full dark:border border-gray-400 md:w-auto shadow-md shadow-gray-400 dark:shadow-none p-2 rounded-md dark:bg-gray-800'>
+     {currentUser?.isOwner &&
+       <div className='flex flex-col w-full dark:border border-gray-400 md:w-auto shadow-md shadow-gray-400 dark:shadow-none p-2 rounded-md dark:bg-gray-800'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>
             <h1 className='text-center p-2'>Recent users</h1>
             <Button outline gradientDuoTone='purpleToPink'>
@@ -207,6 +226,7 @@ function Profile() {
               ))}
           </Table>
         </div>
+        }
 
         <div className='flex flex-col w-full dark:border border-gray-400 md:w-auto shadow-md shadow-gray-400 dark:shadow-none p-2 rounded-md dark:bg-gray-800'>
           <div className='flex justify-between  p-3 text-sm font-semibold'>

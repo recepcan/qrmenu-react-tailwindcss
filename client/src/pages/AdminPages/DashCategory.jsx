@@ -15,7 +15,14 @@ export default function DashCategory() {
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        const res = await fetch(`/server/category/getcategory?userId=${currentUser._id}`);
+        let res =null
+        if(currentUser.isOwner )  
+           { 
+            res = await fetch('/server/category/getcategory');       
+           }
+          else {
+            res = await fetch(`/server/category/getcategory?userId=${currentUser._id}`);
+          } 
         const data = await res.json();
         if (res.ok) {
           setUserCategory(data.category);
@@ -37,9 +44,14 @@ export default function DashCategory() {
   const handleShowMore = async () => {
     const startIndex = userCategory.length;
     try {
-      const res = await fetch(
-        `/server/category/getcategory?userId=${currentUser._id}&startIndex=${startIndex}`
-      );
+    let res =null
+    if(currentUser.isOwner )  
+       { 
+        res = await fetch(`/server/category/getcategory?startIndex=${startIndex}`);
+      }
+      else {
+        res = await fetch(`/server/category/getcategory?userId=${currentUser._id}&startIndex=${startIndex}`);
+      };
       const data = await res.json();
       if (res.ok) {
         setUserCategory((prev) => [...prev, ...data.category]);
@@ -85,7 +97,7 @@ export default function DashCategory() {
         <div className='w-full'>
           <Table hoverable className='shadow-md   w-full'>
             <Table.Head>
-              <Table.HeadCell>Date updated</Table.HeadCell>
+              <Table.HeadCell>Username</Table.HeadCell>
               <Table.HeadCell>category image</Table.HeadCell>
               <Table.HeadCell>category title</Table.HeadCell>
               <Table.HeadCell>Category name</Table.HeadCell>
@@ -98,7 +110,7 @@ export default function DashCategory() {
               <Table.Body className='divide-y' key={category._id}>
                 <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
                   <Table.Cell>
-                    {new Date(category.updatedAt).toLocaleDateString()}
+                   {category.username}
                   </Table.Cell>
                   <Table.Cell>
                     
