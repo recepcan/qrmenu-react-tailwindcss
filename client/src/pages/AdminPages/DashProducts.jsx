@@ -8,6 +8,8 @@ import { toast } from 'react-toastify';
 export default function DashProducts() {
   const { currentUser } = useSelector((state) => state.user);
   const [userProducts, setUserProducts] = useState([]);
+  const [totalProducts, setTotalProducts] = useState([]);
+
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [productIdToDelete, setProductIdToDelete] = useState('');
@@ -18,6 +20,7 @@ export default function DashProducts() {
         const data = await res.json();
         if (res.ok) {
           setUserProducts(data.products);
+          setTotalProducts(data.totalProducts)
           if (data.products.length < 9) {
             setShowMore(false);
           }
@@ -78,7 +81,7 @@ export default function DashProducts() {
       dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
    '>
    <div>
-   total products: {userProducts.length}
+   total products: {totalProducts}
     </div>
     
     {currentUser.isAdmin && userProducts.length > 0 ? (

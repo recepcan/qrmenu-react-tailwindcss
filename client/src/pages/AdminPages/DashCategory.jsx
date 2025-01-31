@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 export default function DashCategory() {
   const { currentUser } = useSelector((state) => state.user);
   const [userCategory, setUserCategory] = useState([]);
+  const [totalCategory, setTotalCategory] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
@@ -18,6 +19,8 @@ export default function DashCategory() {
         const data = await res.json();
         if (res.ok) {
           setUserCategory(data.category);
+          setTotalCategory(data.totalCategory);
+
           if (data.category.length < 9) {
             setShowMore(false);
           }
@@ -76,7 +79,7 @@ export default function DashCategory() {
      scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
       dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
     <div>
-    total category: {userCategory?.length}
+    total category: {totalCategory}
      </div>
     {currentUser.isAdmin && userCategory?.length > 0 ? (
         <div className='w-full'>
