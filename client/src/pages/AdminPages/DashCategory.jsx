@@ -88,13 +88,13 @@ export default function DashCategory() {
 
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto   p-3 flex flex-col items-center justify-center space-y-5
-     scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
+     scrollbar-thin  scrollbar-track-slate-100 scrollbar-thumb-slate-300
       dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
     <div>
     total category: {totalCategory}
      </div>
     {currentUser.isAdmin && userCategory?.length > 0 ? (
-        <div className='w-full'>
+        <div className='w-full shadow-md dark:shadow-none shadow-gray-400  rounded-lg'>
           <Table hoverable className='shadow-md   w-full'>
             <Table.Head>
               <Table.HeadCell>Username</Table.HeadCell>

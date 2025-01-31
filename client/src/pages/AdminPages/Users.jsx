@@ -67,12 +67,13 @@ function Users() {
       };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
+    <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar-thin 
+     scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
     
     <div className=''>Total Users: {totalUsers}</div>
     
     {currentUser.isAdmin && users.length > 0 ? (
-      <>
+      <div className='shadow-md dark:shadow-none shadow-gray-400  rounded-lg '>
         <Table hoverable className='shadow-md'>
           <Table.Head>
             <Table.HeadCell>Owner</Table.HeadCell>
@@ -127,7 +128,7 @@ function Users() {
             Show more
           </button>
         )}
-      </>
+      </div>
     ) : (
       <p>You have no users yet!</p>
     )}

@@ -92,7 +92,7 @@ export default function DashProducts() {
   return (
     <div className='  cursor-all-scroll md:mx-auto p-3 
      flex flex-col items-center justify-center space-y-5
-     scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300
+     scrollbar-thin  scrollbar-track-slate-100 scrollbar-thumb-slate-300
       dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500
    '>
    <div>
@@ -100,8 +100,8 @@ export default function DashProducts() {
     </div>
     
     {currentUser.isAdmin && userProducts.length > 0 ? (
-        <div className='w-full overflow-x-auto '>
-          <Table hoverable className='shadow-md'>
+        <div className='w-full overflow-x-auto shadow-md dark:shadow-none shadow-gray-400 rounded-lg'>
+          <Table hoverable className='shadow-md '>
             <Table.Head>
               <Table.HeadCell>user</Table.HeadCell>
               <Table.HeadCell>price</Table.HeadCell>

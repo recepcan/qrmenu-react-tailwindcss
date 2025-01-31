@@ -90,9 +90,12 @@ function Profile() {
 
 
   return (
-    <div className="w-full min-h-screen flex items-start justify-center  p-4  ">
+    <div className="w-full min-h-screen flex sm:flex-row flex-col max-sm:space-y-5   items-start justify-center  p-4  ">
 
-      <div className="w-80 dark:border border-gray-400 sticky top-5 left-0 bg-gray-100 dark:bg-gray-800 rounded-lg p-5 space-y-5 shadow-md shadow-gray-400  dark:shadow-none
+      <div className="sm:w-80 w-full sm:sticky top-5  max-sm:px-3
+      left-0">
+      <div className="w-full  dark:border border-gray-400  bg-gray-100 dark:bg-gray-800 rounded-lg p-5 space-y-5 shadow-md shadow-gray-400  
+      dark:shadow-none
       flex flex-col items-center justify-center">
         <div className="flex items-center space-x-4">
           {/* Kullanıcının mevcut profil resmi */}
@@ -129,6 +132,7 @@ function Profile() {
         <Button gradientDuoTone="purpleToBlue" className="w-full">Update User </Button>
         <p>isadmin: {currentUser?.isAdmin.toString()}</p>
         <p>id: {currentUser?._id}</p>
+      </div>
       </div>
      
       <div className="flex-1   border-gray-500">
