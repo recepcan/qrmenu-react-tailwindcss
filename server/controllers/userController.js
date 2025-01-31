@@ -42,9 +42,7 @@ export const updateUser = async (req, res, next) => {
       return next(errorHandler(404, 'User not found'));
     }
 
-    // isOwner değeri request içinde varsa onu kullan, yoksa mevcut değeri veya false ekle
-    const isOwnerValue = req.body.isOwner !== undefined ? req.body.isOwner : existingUser.isOwner ?? false;
-
+    
     // Kullanıcıyı güncelle
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
@@ -54,7 +52,7 @@ export const updateUser = async (req, res, next) => {
           email: req.body.email,
           profilePicture: req.body.profilePicture,
           password: req.body.password,
-          isOwner: isOwnerValue, // Eksikse false olarak eklendi
+          
         },
       },
       { new: true }

@@ -8,9 +8,11 @@ import {
   HiOutlineUserGroup,
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
+import { toast } from "react-toastify";
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
 
+  const [file, setFile] = useState(null);
   const [users, setUsers] = useState([]);
   const [category, setCategory] = useState([]);
   const [products, setProducts] = useState([]);
@@ -19,7 +21,34 @@ function Profile() {
   const [totalCategory, setTotalCategory] = useState(0);
   const [lastMonthUsers, setLastMonthUsers] = useState(0);
   const [lastMonthProducts, setLastMonthProducts] = useState(0);
-  const [lastMonthCategory, setLastMonthCategory] = useState(0);
+  const [lastMonthCategory, setLastMonthCategory] = useState(0); 
+
+const [formData,setFormData]=useState({}) 
+
+useEffect(() => {
+  const fetchUser = async () => {
+    try {
+      const res = await fetch(`/server/user/${currentUser._id}`);
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      }
+      if (res.ok) {
+        setFormData(data);
+       console.log(data)
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  fetchUser();
+}, [currentUser]);
+
+console.log(formData)
+
+
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -35,6 +64,7 @@ function Profile() {
         console.log(error.message);
       }
     };
+
     const fetchProducts = async () => {
       try {
         let res =null
@@ -86,7 +116,62 @@ function Profile() {
   }, [currentUser]);
 
 
+const handleImageUpload = async () => {
+    if (!file) {
+      toast.error('Please select a file to upload.');
+      return null;
+    }
+  
+    try {
+      const imageData = new FormData();
+      imageData.append('file', file); // Dosyayı FormData'ya ekliyoruz
+      imageData.append('upload_preset', 'userImage'); // Cloudinary için preset değeri
+  
+      const cloudinaryRes = await fetch('https://api.cloudinary.com/v1_1/dkbg1ejbx/image/upload', {
+        method: 'POST',
+        body: imageData, // FormData gönderimi
+      });
+  
+      const cloudinaryData = await cloudinaryRes.json();
+  
+      if (!cloudinaryRes.ok) {
+        toast.error('Image upload failed.');
+        return null;
+      }
+  
+      toast.success('Image uploaded successfully!');
+      setFormData({...formData,profilePicture:cloudinaryData.secure_url}) // Yüklenen görselin URL'sini döndür
+    } catch (error) {
+      toast.error('Something went wrong during image upload.');
+      console.error(error);
+      return null;
+    }
+  };
+  
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`/server/user/update/${currentUser._id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.message);
+        return;
+      }
 
+      if (res.ok) {
+       console.log(res)
+      toast.success('User Updated Successfuly')
+      }
+    } catch (error) {
+      toast.error(error);
+    }
+  };
 
 
   return (
@@ -94,45 +179,71 @@ function Profile() {
 
       <div className="sm:w-80 w-full sm:sticky top-5  max-sm:px-3
       left-0">
-      <div className="w-full  dark:border border-gray-400  bg-gray-100 dark:bg-gray-800 rounded-lg p-5 space-y-5 shadow-md shadow-gray-400  
+      <form 
+      onSubmit={handleSubmit}
+      className="w-full  dark:border border-gray-400  bg-gray-100 dark:bg-gray-800 rounded-lg p-5 space-y-5 shadow-md shadow-gray-400  
       dark:shadow-none
       flex flex-col items-center justify-center">
         <div className="flex items-center space-x-4">
           {/* Kullanıcının mevcut profil resmi */}
           <img
-            src={currentUser.profilePicture}
+            src={formData.profilePicture}
             className="w-20 h-20 rounded-full border"
             alt="Profil Fotoğrafı"
+            
           />
 
           {/* Dosya yükleme inputu */}
-          <div>
+          <div className="space-y-3">
             <FileInput
               sizing="sm"
-              id="file-upload-helper-text"
-              helperText="Upload Image" />
+              id="profilePicture"
+               type="file"
+            accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+              />
+              <Button 
+              className="w-full"
+              size="sm"
+              onClick={handleImageUpload}
+              gradientDuoTone="purpleToBlue">Upload Image</Button>
+              
           </div>
         </div>
         <TextInput
+          id="username"
           className="w-full"
           type="text"
           placeholder="username"
-          value={currentUser.username} />
+          value={formData.username} 
+          onChange={(e) =>
+            setFormData({ ...formData, username: e.target.value })
+          }/>
         <TextInput
+        id="email"
           className="w-full"
           type="email"
           placeholder="email"
-          value={currentUser.email} />
+          value={formData.email}
+          onChange={(e) =>
+            setFormData({ ...formData, email: e.target.value })
+          } />
         <TextInput
+          id="password"
           className="w-full"
           type="password"
           placeholder="password"
-          value={currentUser.password} />
+          value={formData.password}
+          onChange={(e) =>
+            setFormData({ ...formData, password: e.target.value })
+          }/>
 
-        <Button gradientDuoTone="purpleToBlue" className="w-full">Update User </Button>
+        <Button
+        type="submit"
+        gradientDuoTone="purpleToBlue" className="w-full">Update User </Button>
         <p>isadmin: {currentUser?.isAdmin.toString()}</p>
         <p>id: {currentUser?._id}</p>
-      </div>
+      </form>
       </div>
      
       <div className="flex-1   border-gray-500">
