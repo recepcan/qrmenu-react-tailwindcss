@@ -72,7 +72,7 @@ export default function UpdateProduct() {
       imageData.append('file', file); // Dosyayı FormData'ya ekliyoruz
       imageData.append('upload_preset', 'products'); // Cloudinary için preset değeri
   
-      const cloudinaryRes = await fetch('https://api.cloudinary.com/v1_1/dkbg1ejbx/image/upload', {
+      const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`, {
         method: 'POST',
         body: imageData, // FormData gönderimi
       });

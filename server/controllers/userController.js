@@ -9,7 +9,7 @@ export const test = (req, res) => {
 
 
 export const updateUser = async (req, res, next) => {
-  if (req.user.id !== req.params.userId) {
+  if (req.user.id !== req.params.userId && !req.user.isAdmin) {
     return next(errorHandler(403, 'You are not allowed to update this user'));
   }
 
@@ -18,7 +18,7 @@ export const updateUser = async (req, res, next) => {
       if (req.body.password.length < 6) {
         return next(errorHandler(400, 'Password must be at least 6 characters'));
       }
-      req.body.password = bcryptjs.hashSync(req.body.password, 10); // Şifreyi hashliyoruz
+      req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
 
     if (req.body.username) {
@@ -42,7 +42,11 @@ export const updateUser = async (req, res, next) => {
       return next(errorHandler(404, 'User not found'));
     }
 
-    
+    // Eğer isAdmin değiştirilmeye çalışılıyorsa ve yetkili değilse hata döndür
+    if (req.body.hasOwnProperty('isAdmin') && !req.user.isAdmin) {
+      return next(errorHandler(403, 'You are not allowed to change admin status'));
+    }
+
     // Kullanıcıyı güncelle
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
@@ -52,7 +56,7 @@ export const updateUser = async (req, res, next) => {
           email: req.body.email,
           profilePicture: req.body.profilePicture,
           password: req.body.password,
-          
+          ...(req.body.hasOwnProperty('isAdmin') && { isAdmin: req.body.isAdmin }) // Admin yetkisini sadece adminler değiştirebilir
         },
       },
       { new: true }
@@ -68,6 +72,7 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const deleteUser = async (req, res, next) => {
   if (!req.user.isAdmin && req.user.id !== req.params.userId) {

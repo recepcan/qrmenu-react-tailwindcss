@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Modal, Table, Button } from 'flowbite-react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { FaCheck, FaTimes } from 'react-icons/fa';
+import {toast} from 'react-toastify'
 function Users() {
     const { currentUser } = useSelector((state) => state.user);
   const [users, setUsers] = useState([]);
@@ -66,6 +67,32 @@ function Users() {
         }
       };
 
+      const handleToggleAdmin = async (userId, currentStatus) => {
+        try {
+            const res = await fetch(`/server/user/update/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ isAdmin: !currentStatus }), // Admin durumunu tersine çeviriyoruz
+            });
+    
+            const data = await res.json();
+            if (res.ok) {
+              toast.success('işlem başarılı')
+                setUsers((prevUsers) =>
+                    prevUsers.map((user) =>
+                        user._id === userId ? { ...user, isAdmin: !user.isAdmin } : user
+                    )
+                );
+            } else {
+                console.log(data.message);
+            }
+        } catch (error) {
+            toast.error(error.message);
+        }
+    };
+
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar-thin 
      scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
@@ -98,13 +125,24 @@ function Users() {
                 </Table.Cell>
                 <Table.Cell>{user.username}</Table.Cell>
                 <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell>
+                <Table.Cell className='flex space-x-3 items-center  border'>
                   {user.isAdmin ? (
                     <FaCheck className='text-green-500' />
                   ) : (
                     <FaTimes className='text-red-500' />
                   )}
+
+                  
+                  <button
+                      onClick={() => handleToggleAdmin(user._id, user.isAdmin)}
+                      className={`p-2 text-white rounded ${user.isAdmin ? 'bg-red-500' : 'bg-green-500'}`}
+                  >
+                      {user.isAdmin ? 'Revoke Admin' : 'Make Admin'}
+                  </button>
+              
+
                 </Table.Cell>
+               
                 <Table.Cell>
                   <span
                     onClick={() => {

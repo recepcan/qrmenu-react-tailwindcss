@@ -21,7 +21,7 @@ export default function CreateCategory() {
       imageData.append('file', file);
       imageData.append('upload_preset', 'categories'); // Cloudinary için preset
 
-      const cloudinaryRes = await fetch('https://api.cloudinary.com/v1_1/dkbg1ejbx/image/upload', {
+      const cloudinaryRes = await fetch(`https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`, {
         method: 'POST',
         body: imageData,
       });
