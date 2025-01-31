@@ -79,10 +79,7 @@ export const deletecategory = async (req, res, next) => {
     }
 
     // Cloudinary'den resmi sil
-    if (category.image) {
-      const publicId = category.image.split('/').pop().split('.')[0];
-      await cloudinary.uploader.destroy(`categories/${publicId}`);
-    }
+    
 
     await Category.findByIdAndDelete(req.params.categoryId);
     res.status(200).json({ message: 'The category has been deleted' });
