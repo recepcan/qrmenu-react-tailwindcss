@@ -108,7 +108,7 @@ export default function DashCategory() {
             </Table.Head>
             {userCategory.map((category) => (
               <Table.Body className='divide-y' key={category._id}>
-                <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
+                <Table.Row className='bg-white border dark:border-gray-700 dark:bg-gray-800'>
                   <Table.Cell>
                    {category.username}
                   </Table.Cell>

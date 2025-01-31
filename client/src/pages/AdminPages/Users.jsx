@@ -102,30 +102,35 @@ function Users() {
     {currentUser.isAdmin && users.length > 0 ? (
       <div className='shadow-md dark:shadow-none shadow-gray-400  rounded-lg '>
         <Table hoverable className='shadow-md'>
-          <Table.Head>
-            <Table.HeadCell>Owner</Table.HeadCell>
-            <Table.HeadCell>User image</Table.HeadCell>
-            <Table.HeadCell>Username</Table.HeadCell>
-            <Table.HeadCell>Email</Table.HeadCell>
-            <Table.HeadCell>Admin</Table.HeadCell>
-            <Table.HeadCell>Delete</Table.HeadCell>
+          <Table.Head className='  w-full'>
+            <Table.HeadCell className='flex justify-center'>Owner</Table.HeadCell>
+            <Table.HeadCell >User image</Table.HeadCell>
+            <Table.HeadCell >Username</Table.HeadCell>
+            <Table.HeadCell >Email</Table.HeadCell>
+            <Table.HeadCell className='flex justify-center'>Admin</Table.HeadCell>
+            <Table.HeadCell >Delete</Table.HeadCell>
           </Table.Head>
           {users.map((user) => (
             <Table.Body className='divide-y' key={user._id}>
-              <Table.Row className='bg-white dark:border-gray-700 dark:bg-gray-800'>
-                <Table.Cell>
-                  {user.isOwner.toString()}
+              <Table.Row className='bg-white border dark:border-gray-700 dark:bg-gray-800'>
+                <Table.Cell className=' flex flex-col justify-center items-center'>
+                {user.isOwner ? (
+                  <FaCheck className='text-green-500' />
+                ) : (
+                  <FaTimes className='text-red-500' />
+                )}
+
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell >
                   <img
                     src={user.profilePicture}
                     alt={user.username}
                     className='w-10 h-10 object-cover bg-gray-500 rounded-full'
                   />
                 </Table.Cell>
-                <Table.Cell>{user.username}</Table.Cell>
-                <Table.Cell>{user.email}</Table.Cell>
-                <Table.Cell className='flex space-x-3 items-center  border'>
+                <Table.Cell >{user.username}</Table.Cell>
+                <Table.Cell >{user.email}</Table.Cell>
+                <Table.Cell className='flex space-x-3 items-center justify-center  '>
                   {user.isAdmin ? (
                     <FaCheck className='text-green-500' />
                   ) : (
@@ -143,7 +148,7 @@ function Users() {
 
                 </Table.Cell>
                
-                <Table.Cell>
+                <Table.Cell >
                   <span
                     onClick={() => {
                       setShowModal(true);

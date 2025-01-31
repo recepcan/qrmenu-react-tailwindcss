@@ -9,6 +9,7 @@ import {
 } from 'react-icons/hi';
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
+import { FaCheck, FaTimes } from "react-icons/fa";
 function Profile() {
   const { currentUser } = useSelector((state) => state.user);
 
@@ -188,18 +189,19 @@ const handleImageUpload = async () => {
           {/* Kullanıcının mevcut profil resmi */}
           <img
             src={formData.profilePicture}
-            className="w-20 h-20 rounded-full border"
+            className="w-20 h-24 rounded-lg border "
             alt="Profil Fotoğrafı"
             
           />
 
           {/* Dosya yükleme inputu */}
-          <div className="space-y-3">
+          <div className="space-y-3  h-24 flex flex-col justify-between">
             <FileInput
               sizing="sm"
               id="profilePicture"
                type="file"
-            accept="image/*"
+            accept="image/*" 
+            className=""
               onChange={(e) => setFile(e.target.files[0])}
               />
               <Button 
@@ -240,8 +242,13 @@ const handleImageUpload = async () => {
 
         <Button
         type="submit"
-        gradientDuoTone="purpleToBlue" className="w-full">Update User </Button>
-        <p>isadmin: {currentUser?.isAdmin.toString()}</p>
+        gradientDuoTone="purpleToBlue" className="w-full  ">Update User </Button>
+        <p className="flex items-center justify-center space-x-3">isadmin: {currentUser.isAdmin ? (
+                            <FaCheck className='text-green-500 ' />
+                          ) : (
+                            <FaTimes className='text-red-500' />
+                          )}
+        </p>
         <p>id: {currentUser?._id}</p>
       </form>
       </div>
@@ -327,7 +334,7 @@ const handleImageUpload = async () => {
             {users &&
               users.map((user) => (
                 <Table.Body key={user._id} className='divide-y  '>
-                  <Table.Row className='bg-white  dark:bg-gray-900'>
+                  <Table.Row className='bg-white border dark:border-gray-700 dark:bg-gray-900'>
                     <Table.Cell>
                       <img
                         src={user.profilePicture}
@@ -358,7 +365,7 @@ const handleImageUpload = async () => {
             {category &&
               category.map((category) => (
                 <Table.Body key={category._id} className='divide-y'>
-                  <Table.Row className='bg-white  dark:bg-gray-900'>
+                  <Table.Row className='bg-white border dark:border-gray-700  dark:bg-gray-900'>
                     <Table.Cell className='w-96'>
                         <p className='line-clamp-2'>{category.title}</p>
                     </Table.Cell>
@@ -390,7 +397,7 @@ const handleImageUpload = async () => {
             {products &&
               products.map((product) => (
                  <Table.Body key={product._id} className='divide-y'>
-                  <Table.Row className='bg-white  dark:bg-gray-900'>
+                  <Table.Row className='bg-white border dark:border-gray-700 dark:bg-gray-900'>
                     <Table.Cell className='w-96'>
                         <p className='line-clamp-2'>{product.title}</p>
                     </Table.Cell>

@@ -34,7 +34,7 @@ function Header() {
   </button>
   </div>
       <div className='flex w-1/3   space-x-3 max-sm:hidden'>
-      <Link to={'/panel'}>
+      <Link to={'/panel?tab=profile'}>
       <Button
        size='sm'
         

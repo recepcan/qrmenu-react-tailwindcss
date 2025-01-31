@@ -116,7 +116,7 @@ export default function DashProducts() {
             </Table.Head>
             {userProducts.map((product,index) => (
               <Table.Body className=' ' key={index}>
-                <Table.Row className={`bg-white dark:border-gray-700 dark:bg-gray-800 ${product.stock=='0' && 'border border-red-600 dark:border-red-900'}`}>
+                <Table.Row className={`bg-white border dark:border-gray-700 dark:bg-gray-800 ${product.stock=='0' && 'border border-red-600 dark:border-red-900'}`}>
                 <Table.Cell>
                 {/*new Date(product.updatedAt).toLocaleDateString() */}
                 {product.username} 

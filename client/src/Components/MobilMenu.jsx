@@ -27,7 +27,7 @@ function MobilMenu() {
 
       {/* Menü İçeriği */}
       <div className="flex flex-col space-y-3 sm:hidden px-8">
-        <Link to={"/panel"}>
+        <Link to={"/panel?tab=profile"}>
           <Button size="sm" outline  gradientDuoTone="greenToBlue" className="w-full">
             Panel
           </Button>
