@@ -15,7 +15,8 @@ export const verifyToken = (req, res, next) => {
       // Token süresi dolmuşsa kullanıcıyı çıkış yaptır ve /giris-yap sayfasına yönlendir
       if (err.name === 'TokenExpiredError') {
         // Token süresi dolduğunda signOut fonksiyonunu çağır
-        return signout(req, res, next, true); // Yönlendirme isteği ile
+        signout(req, res, next, true);
+        console.log("signedout") // Yönlendirme isteği ile
       } 
       
       // Diğer token hataları için özel bir hata mesajı

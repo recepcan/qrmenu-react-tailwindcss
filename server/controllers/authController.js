@@ -153,3 +153,21 @@ export const google = async (req, res, next) => {
   }
 };
 
+
+
+// export const authVerify = async (req, res, next) => {
+//   try {
+//     const token = req.cookies.access_token; // httpOnly cookie'den token al
+
+//     if (!token) {
+//       return res.status(401).json({ message: "Yetkilendirme başarısız" });
+//     }
+
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.user = decoded; // Kullanıcı bilgilerini req objesine ekle
+//     next(); // Middleware olduğu için sonraki işlemlere devam et
+
+//   } catch (error) {
+//     return res.status(401).json({ message: "Token süresi dolmuş veya geçersiz" });
+//   }
+// };

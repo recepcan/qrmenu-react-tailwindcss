@@ -7,6 +7,9 @@ import {
   HiDocumentText,
   HiOutlineUserGroup,
 } from 'react-icons/hi';
+import {BiSolidCategory} from 'react-icons/bi';
+import { IoFastFood } from "react-icons/io5";
+
 import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import { FaCheck, FaTimes } from "react-icons/fa";
@@ -285,7 +288,7 @@ const handleImageUpload = async () => {
               </h3>
               <p className='text-2xl'>{totalCategory}</p>
             </div>
-            <HiAnnotation className='bg-indigo-600  text-white rounded-full text-5xl p-3 shadow-md shadow-gray-400 dark:shadow-none' />
+            <BiSolidCategory className='bg-indigo-600  text-white rounded-full text-5xl p-3 shadow-md shadow-gray-400 dark:shadow-none' />
           </div>
           <div className='flex  gap-2 text-sm'>
             <span className='text-green-500 flex items-center'>
@@ -302,7 +305,7 @@ const handleImageUpload = async () => {
               <h3 className='text-gray-500 text-md uppercase'>Total Products</h3>
               <p className='text-2xl'>{totalProducts}</p>
             </div>
-            <HiDocumentText className='bg-lime-600  text-white rounded-full text-5xl p-3 shadow-md shadow-gray-400 dark:shadow-none' />
+            <IoFastFood className='bg-lime-600  text-white rounded-full text-5xl p-3 shadow-md shadow-gray-400 dark:shadow-none' />
           </div>
           <div className='flex  gap-2 text-sm'>
             <span className='text-green-500 flex items-center'>

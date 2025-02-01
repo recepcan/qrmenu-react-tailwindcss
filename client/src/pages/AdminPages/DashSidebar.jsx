@@ -93,7 +93,7 @@ function DashSideBar({ adminMenu }) {
 
             {/* Dropdown Menü */}
             {item.submenu && openDropdown === item.title && (
-              <div className="absolute left-0 top-full  z-40 bg-white dark:bg-gray-800 border rounded-lg shadow-lg w-48">
+              <div className="absolute left-0 max-sm:hidden top-full  z-40 bg-white dark:bg-gray-800 border rounded-lg shadow-lg w-48">
                 {item.submenu.map((subItem, subIndex) => (
                   <Link
                     key={subIndex}

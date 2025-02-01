@@ -28,7 +28,7 @@ function Layout() {
     
   return (
     <div>
-    
+   
     <Header/>
     <Routes>
 
@@ -44,7 +44,7 @@ function Layout() {
         <Route path="/inthebox" element={<IntheBox />} />
 
         <Route element={<PrivateRoute />}>
-          <Route path='/panel' element={<Panel />} />
+          <Route path='/panel' element={ <Panel />} />
         </Route>
         <Route element={<OnlyAdminPrivateRoute />}>
          <Route path='/create-product' element={<CreateProduct />} />
