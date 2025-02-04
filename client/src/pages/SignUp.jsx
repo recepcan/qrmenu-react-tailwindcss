@@ -46,11 +46,10 @@ function SignUp() {
 
             </div>
             <div className="w-1/2 max-md:w-full space  md:h-[600px]   flex items-center justify-center ">
-                <form className='flex flex-col w-full md:border border-black dark:border-white  
+            <form className='flex flex-col w-full md:border border-black dark:border-white  
                 transition-all duration-300  h-full items-center justify-center  gap-5  
                 shadow-gray-400 p-5 rounded-lg '
                     onSubmit={handleSubmit}>
-
                     <div className='space-y-3 w-full'>
                         <div className='text-sm font-bold'>
                             your username
