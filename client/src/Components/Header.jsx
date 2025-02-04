@@ -37,8 +37,8 @@ function Header() {
       <Link to={'/panel?tab=profile'}>
       <Button
        size='sm'
-        
-       gradientDuoTone="tealToLime">
+        outline
+        gradientMonochrome="success">
       Panel
     </Button>
     </Link>

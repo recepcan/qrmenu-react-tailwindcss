@@ -34,13 +34,21 @@ function MobilMenu() {
         </Link>
 
         <Link to={"/sign-in"}>
-          <Button size="sm" outline gradientDuoTone="greenToBlue" className="w-full">
+          <Button 
+          size="sm" 
+          outline 
+          gradientDuoTone="greenToBlue" 
+          className="w-full">
             Sign In
           </Button>
         </Link>
 
         <Link to={"/sign-up"}>
-          <Button size="sm" outline gradientDuoTone="greenToBlue" className="w-full">
+          <Button 
+          size="sm" 
+          outline 
+          gradientDuoTone="greenToBlue" 
+          className="w-full">
             Sign Up
           </Button>
         </Link>

@@ -100,8 +100,8 @@ export default function DashProducts() {
     </div>
     
     {currentUser.isAdmin && userProducts.length > 0 ? (
-        <div className='w-full overflow-x-auto shadow-md dark:shadow-none shadow-gray-400 rounded-lg'>
-          <Table hoverable className='shadow-md '>
+        <div className='w-full overflow-x-auto  space-y-5  p-3   rounded-lg'>
+          <Table hoverable className='shadow-lg shadow-gray-400 dark:shadow-none'>
             <Table.Head>
               <Table.HeadCell>user</Table.HeadCell>
               <Table.HeadCell>price</Table.HeadCell>
@@ -115,8 +115,11 @@ export default function DashProducts() {
               </Table.HeadCell>
             </Table.Head>
             {userProducts.map((product,index) => (
-              <Table.Body className=' ' key={index}>
-                <Table.Row className={`bg-white border dark:border-gray-700 dark:bg-gray-800 ${product.stock=='0' && 'border border-red-600 dark:border-red-900'}`}>
+              <Table.Body 
+              
+              key={index}>
+                <Table.Row 
+                className={`bg-white border-y   dark:border-gray-700 dark:bg-gray-800 ${product.stock=='0' && 'border border-red-600 dark:border-red-900'}`}>
                 <Table.Cell>
                 {/*new Date(product.updatedAt).toLocaleDateString() */}
                 {product.username} 
@@ -172,7 +175,7 @@ export default function DashProducts() {
             <Button 
             gradientDuoTone='greenToBlue'
               onClick={handleShowMore}
-              className='w-full self-center text-sm py-2'
+              className='w-full  self-center text-sm '
             >
               Show more
             </Button>

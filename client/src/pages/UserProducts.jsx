@@ -54,10 +54,13 @@ useEffect(() => {
 
 
 
-      <button className="w-full px-5  flex items-center justify-between ">
-        <IoMdArrowRoundBack onClick={() => navigate(-1)} className="p-2 w-10 h-10 rounded-lg bg-green-600 text-white" />
+      <div className="w-full px-5  flex items-center justify-between ">
+        <IoMdArrowRoundBack 
+        onClick={() => navigate(-1)} 
+        className="p-2 w-10 h-10 rounded-lg   border border-gray-500 " />
         <h1 className="text-2xl  bg-gray-200 dark:bg-gray-800 rounded-lg p-2 shadow-md uppercase font-mono"> {tab}</h1>
-        <button onClick={() => dispatch(toggleProductStyle())}
+        <button 
+        onClick={() => dispatch(toggleProductStyle())}
           className="w-10 h-10 border  rounded-lg p-2 border-gray-500  ">
           {
             productStyleColumn ?
@@ -68,7 +71,7 @@ useEffect(() => {
           }
         </button>
 
-      </button>
+      </div>
       
       
       

@@ -63,7 +63,9 @@ function SignIn() {
      
             </div>
             <div className="w-1/2 max-md:w-full  md:h-[600px]   flex items-center justify-center ">
-                <form className='flex w-full md:border border-black dark:border-white  transition-all duration-300 flex-col h-full items-center justify-evenly  gap-5  shadow-gray-400 p-5 rounded-lg '
+                <form className='flexflex-col items-center justify-center space-y-3 h-full  w-full md:border border-black dark:border-white  transition-all
+                 duration-300   gap-5  shadow-gray-400 p-5 
+                 rounded-lg '
                  onSubmit={handleSubmit}>
                    
                     <div className='space-y-3'>
