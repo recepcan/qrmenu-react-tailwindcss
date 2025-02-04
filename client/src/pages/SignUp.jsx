@@ -51,7 +51,7 @@ function SignUp() {
                 shadow-gray-400 p-5 rounded-lg '
                     onSubmit={handleSubmit}>
 
-                    <div className='space-y-3'>
+                    <div className='space-y-3 w-full'>
                         <div className='text-sm font-bold'>
                             your username
                             <input id='username' onChange={handleChange} className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' type="text" placeholder='username' />
