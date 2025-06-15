@@ -1,5 +1,5 @@
 import { Button, FileInput, Label, TextInput,Table } from "flowbite-react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,memo } from "react";
 import { useSelector } from "react-redux";
 import {
   HiAnnotation,
@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 import { toast } from "react-toastify";
 import { FaCheck, FaTimes } from "react-icons/fa";
 function Profile() {
+  console.log("profile rendered")
   const { currentUser } = useSelector((state) => state.user);
 
   const [file, setFile] = useState(null);
@@ -427,4 +428,4 @@ const handleImageUpload = async () => {
   );
 }
 
-export default Profile;
+export default memo(Profile);

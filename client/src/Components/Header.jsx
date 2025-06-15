@@ -1,5 +1,5 @@
 import { Button } from 'flowbite-react'
-import React from 'react'
+import React,{memo} from 'react'
 import { MdAddShoppingCart } from 'react-icons/md'
 import { Link, useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { toggleMenu, toggleTheme } from '../store/headerSlice'
@@ -10,6 +10,7 @@ import MobilMenu from './MobilMenu'
 import { TiThMenu } from "react-icons/ti";
 
 function Header() {
+  console.log("header rendered")
   const {theme}=useSelector(state=>state.header)
   const {mobilMenu}=useSelector(state=>state.header)
   

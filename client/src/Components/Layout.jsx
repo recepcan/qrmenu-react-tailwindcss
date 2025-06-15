@@ -35,8 +35,11 @@ function Layout() {
     <Route path="/:username" element={<CurrentUser />} />
     <Route path="/:username/products" element={<UserProducts />} />
     
+    
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
+
+
         <Route path="/sicak-icecekler" element={<HotDrinks />} />
         <Route path="/soguk-icecekler" element={<ColdDrinks />} />
         <Route path="/tatlilar" element={<Sweets />} />

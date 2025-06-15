@@ -98,7 +98,7 @@ export const signout = (req, res, next) => {
 };
 
 export const getUsers = async (req, res, next) => {
-  // Admin kontrolü yapmayı unutma
+  
  
   try {
     const startIndex = parseInt(req.query.startIndex) || 0;

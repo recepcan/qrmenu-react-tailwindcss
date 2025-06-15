@@ -15,11 +15,6 @@ import categoryRoutes from './routes/categoryRoutes.js'
 import homeRoutes from './routes/homeRoutes.js'
 import { v2 as cloudinary } from 'cloudinary';
 
-
-
-
-
-
 const app = express();
 
 dotenv.config();
