@@ -6,11 +6,19 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
+// user slice'ı ayrı persist config ile sarıyoruz.
+// blacklist burada slice içindeki field isimlerini tanır.
+const userPersistConfig = {
+  key: 'user',
+  storage,
+  blacklist: ['loading', 'error'], // bu ikisi diske yazılmaz, her açılışta false/null başlar
+};
+
 const rootReducer = combineReducers({
   product: productReducer,
-    intheBox: intheBoxReducer,
-    user:userReducer,
-    header:headerReducer
+  intheBox: intheBoxReducer,
+  user: persistReducer(userPersistConfig, userReducer), // ← sadece user sarıldı
+  header: headerReducer
 });
 
 const persistConfig = {
