@@ -1,137 +1,196 @@
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useLocation } from 'react-router-dom'
-import { setadminMenu, signoutSuccess } from '../../store/userSlice';
-import { toast } from 'react-toastify';
-import { FaPlus, FaSignOutAlt, FaUser, FaUsers } from 'react-icons/fa';
+/* eslint-disable react/prop-types */
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation } from "react-router-dom";
+import { signoutSuccess } from "../../store/userSlice";
+import { toast } from "react-toastify";
+import {
+  FaPlus,
+  FaSignOutAlt,
+  FaUser,
+  FaUsers,
+} from "react-icons/fa";
 import { MdCreateNewFolder } from "react-icons/md";
-import { BiSolidCategory } from 'react-icons/bi';
-import { CgWebsite } from 'react-icons/cg';
+import { BiSolidCategory } from "react-icons/bi";
+import { CgWebsite } from "react-icons/cg";
+import { HiPhotograph } from "react-icons/hi";
 
-function DashSideBar({ adminMenu }) {
+function NavPill({ to, active, children, icon }) {
+  return (
+    <Link
+      to={to}
+      className={`flex shrink-0 items-center gap-2 rounded-xl border px-3 py-2 text-sm font-semibold transition sm:px-4 ${
+        active
+          ? "border-emerald-500/80 bg-emerald-600 text-white shadow-sm dark:border-emerald-600"
+          : "border-stone-200 bg-white text-stone-700 hover:border-stone-300 hover:bg-stone-50 dark:border-gray-600 dark:bg-gray-800 dark:text-stone-200 dark:hover:border-gray-500 dark:hover:bg-gray-700/50"
+      }`}
+    >
+      <span className="text-lg opacity-90" aria-hidden>
+        {icon}
+      </span>
+      <span className="max-md:sr-only sm:inline">{children}</span>
+    </Link>
+  );
+}
+
+function SubMenu({ label, icon, active, items }) {
+  return (
+    <details
+      className={`group relative shrink-0 rounded-xl border ${
+        active
+          ? "border-emerald-500/80 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/40"
+          : "border-stone-200 bg-white dark:border-gray-600 dark:bg-gray-800"
+      }`}
+    >
+      <summary
+        className="flex cursor-pointer list-none items-center gap-2 px-3 py-2 text-sm font-semibold text-stone-800 dark:text-stone-100 sm:px-4 [&::-webkit-details-marker]:hidden"
+      >
+        <span className="text-lg" aria-hidden>
+          {icon}
+        </span>
+        <span className="max-md:sr-only sm:inline">{label}</span>
+        <span className="text-xs text-stone-400 dark:text-gray-500 md:hidden">
+          ▾
+        </span>
+      </summary>
+      <div className="absolute left-0 top-full z-50 mt-1 min-w-[11rem] rounded-xl border border-stone-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-800">
+        {items.map((item) => (
+          <Link
+            key={item.link}
+            to={item.link}
+            className="block px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-gray-700/80"
+          >
+            {item.title}
+          </Link>
+        ))}
+      </div>
+    </details>
+  );
+}
+
+function DashSidebar({ activeTab }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.user);
-  const [tab, setTab] = useState('home');
-  const [openDropdown, setOpenDropdown] = useState(null);
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(location.search);
-    const tabFromUrl = urlParams.get('tab');
-    if (tabFromUrl) {
-      setTab(tabFromUrl);
-    }
-  }, [location.search]);
+  const onPanel = location.pathname === "/panel";
 
   const handleSignout = async () => {
     try {
-      const res = await fetch('/server/user/signout', {
-        method: 'POST',
-      });
+      const res = await fetch("/server/user/signout", { method: "POST" });
       const data = await res.json();
-      if (!res.ok) {
-        toast.error(data.message);
-      } else {
-        dispatch(signoutSuccess());
-      }
+      if (!res.ok) toast.error(data.message);
+      else dispatch(signoutSuccess());
     } catch (error) {
-      toast.error(error)
+      toast.error(error?.message ?? "Çıkış yapılamadı.");
     }
   };
 
-  const tabs = [
-    {
-      title: 'profile',
-      icon: <FaUser />,
-    },
-    {
-      title: "products",
-      icon: <MdCreateNewFolder />,
-      submenu: [
-        { title: "All Products", link: "/panel?tab=products" },
-        { title: "New Product", link: "/create-product" }
-      ]
-    },
-    currentUser?.isOwner && 
-    { title: "users", icon: <FaUsers /> },
-    {
-      title: "category",
-      icon: <BiSolidCategory />,
-      submenu: [
-        { title: "All Categories", link: "/panel?tab=category" },
-        { title: "New Category", link: "/create-category" }
-      ]
-    },
-    {
-      title:'My Page',
-      icon:<CgWebsite />,
-      to:currentUser.username
-    }
-  ].filter(Boolean);
+  const showAdd =
+    onPanel &&
+    (activeTab === "category" ||
+      activeTab === "products" ||
+      activeTab === "home");
+
+  const addHref =
+    activeTab === "category"
+      ? "/create-category"
+      : activeTab === "home"
+        ? "/create-home"
+        : "/create-product";
+
+  const addLabel =
+    activeTab === "category"
+      ? "Kategori ekle"
+      : activeTab === "home"
+        ? "Anasayfa ekle"
+        : "Ürün ekle";
 
   return (
-    <div className='w-full h-16 px-5  shadow-md shadow-gray-400 transition-all duration-300 bg-gray-200 dark:bg-gray-800 flex justify-between space-x-2 dark:shadow-none'>
-
-      {/* Navbar Sol Tarafı */}
-      <div className='flex space-x-2 items-center relative'>
-        {tabs.map((item, index) => (
-          <div 
-            key={index} 
-            className="relative"
-            onMouseEnter={() => setOpenDropdown(item.title)}
-            onMouseLeave={() => setOpenDropdown(null)}
+    <div className="sticky top-14 z-30 border-b border-stone-200/80 bg-white/90 backdrop-blur-md dark:border-gray-700/80 dark:bg-gray-900/90 sm:top-16">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
+        <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-stone-300 dark:scrollbar-thumb-gray-600 sm:pb-0 md:gap-3">
+          <NavPill
+            to="/panel?tab=profile"
+            active={activeTab === "profile" || activeTab === ""}
+            icon={<FaUser />}
           >
-            <Link
-              className={`${tab === item.title ? 'dark:text-white bg-sky-700 dark:bg-sky-500 text-white font-extrabold' : ''}
-                h-12 border border-gray-500 rounded-lg p-2 space-x-2 shadow-sm md:hover:bg-sky-900 md:hover:text-white
-                flex items-center justify-start text-lg font-extrabold`}
-              to={item.to? `/${item.to}` : `/panel?tab=${item.title}`}
+            Profil
+          </NavPill>
+
+          <SubMenu
+            label="Ürünler"
+            icon={<MdCreateNewFolder />}
+            active={activeTab === "products"}
+            items={[
+              { title: "Tüm ürünler", link: "/panel?tab=products" },
+              { title: "Yeni ürün", link: "/create-product" },
+            ]}
+          />
+
+          <SubMenu
+            label="Kategoriler"
+            icon={<BiSolidCategory />}
+            active={activeTab === "category"}
+            items={[
+              { title: "Tüm kategoriler", link: "/panel?tab=category" },
+              { title: "Yeni kategori", link: "/create-category" },
+            ]}
+          />
+
+          <SubMenu
+            label="Anasayfa"
+            icon={<HiPhotograph />}
+            active={activeTab === "home"}
+            items={[
+              { title: "Tüm kayıtlar", link: "/panel?tab=home" },
+              { title: "Yeni kayıt", link: "/create-home" },
+            ]}
+          />
+
+          {currentUser?.isOwner && (
+            <NavPill
+              to="/panel?tab=users"
+              active={activeTab === "users"}
+              icon={<FaUsers />}
             >
-              <div className={`text-xl `}>{item.icon}</div>
-              <h1 className={`max-md:hidden text-sm`}>{item.title}</h1>
+              Kullanıcılar
+            </NavPill>
+          )}
+
+          {currentUser?.username && (
+            <NavPill
+              to={`/${currentUser.username}`}
+              active={false}
+              icon={<CgWebsite />}
+            >
+              Canlı menü
+            </NavPill>
+          )}
+        </div>
+
+        <div className="flex shrink-0 items-center gap-2">
+          {showAdd && (
+            <Link
+              to={addHref}
+              className="flex h-11 items-center gap-2 rounded-xl bg-emerald-600 px-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 sm:px-4"
+            >
+              <FaPlus className="text-base" aria-hidden />
+              <span className="hidden sm:inline">{addLabel}</span>
             </Link>
-
-            {/* Dropdown Menü */}
-            {item.submenu && openDropdown === item.title && (
-              <div className="absolute left-0 max-sm:hidden top-full  z-40 bg-white dark:bg-gray-800 border rounded-lg shadow-lg w-48">
-                {item.submenu.map((subItem, subIndex) => (
-                  <Link
-                    key={subIndex}
-                    to={subItem.link}
-                    className="block px-4 py-3 rounded-lg text-gray-700 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
-                  >
-                    {subItem.title}
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
-        ))}
+          )}
+          {onPanel && (
+            <button
+              type="button"
+              onClick={handleSignout}
+              className="flex h-11 w-11 items-center justify-center rounded-xl border border-stone-200 bg-white text-stone-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-700 dark:border-gray-600 dark:bg-gray-800 dark:text-stone-300 dark:hover:border-red-900 dark:hover:bg-red-950/40 dark:hover:text-red-300"
+              aria-label="Çıkış yap"
+            >
+              <FaSignOutAlt className="text-lg" />
+            </button>
+          )}
+        </div>
       </div>
-
-      {/* Navbar Sağ Tarafı */}
-      <div className="flex-1 flex flex-row justify-end space-x-2 items-center    p-2">
-      
-      {
-        <Link 
-        to={tab === 'category' ? '/create-category' : '/create-product'} 
-        className={`${tab !== 'category' && tab !== 'products' ? 'hidden' : 'border border-gray-500 p-2 rounded-lg h-12 flex items-center justify-center space-x-2 font-bold hover:bg-green-700'}`}
-      >
-        <FaPlus />
-        <h1 className='max-md:hidden'>{tab === 'category' ? 'Add category' : 'Add product'} </h1>
-      </Link>
-      }
-      
-      {location.pathname === '/panel' &&
-          <button onClick={handleSignout} className='hover:bg-red-600 h-12 border font-semibold p-2 rounded-lg border-gray-500'>
-            <FaSignOutAlt />
-          </button>
-        }
-        
-      </div>
-
     </div>
-  )
+  );
 }
 
-export default DashSideBar;
+export default DashSidebar;

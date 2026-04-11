@@ -1,59 +1,50 @@
-import { Button } from "flowbite-react";
-import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleMenu } from "../store/headerSlice";
 import { Link } from "react-router-dom";
+import { toggleMenu } from "../store/headerSlice";
 
 function MobilMenu() {
   const dispatch = useDispatch();
   const { mobilMenu } = useSelector((state) => state.header);
 
+  const linkClass =
+    "flex w-full items-center justify-center rounded-xl border border-stone-200 bg-white py-3 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50 dark:border-gray-600 dark:bg-gray-800 dark:text-stone-100 dark:hover:border-emerald-800 dark:hover:bg-emerald-950/40";
+
   return (
     <div
-      className={`w-full  border-gray-500 p-5 flex flex-col space-y-3 bg-gray-200 border-b-2 
-      rounded-b-xl dark:bg-black absolute top-14 left-0 sm:hidden 
-      transition-all duration-300 ease-in-out overflow-hidden 
-      ${mobilMenu ? "max-h-screen opacity-100" : "max-h-0 opacity-0 pointer-events-none"}`}
+      className={`absolute left-0 right-0 top-full overflow-hidden border-b border-stone-200/90 bg-white/95 backdrop-blur-md transition-all duration-300 ease-out dark:border-gray-700/90 dark:bg-gray-900/95 sm:hidden ${
+        mobilMenu
+          ? "max-h-[min(70vh,420px)] opacity-100"
+          : "max-h-0 opacity-0 pointer-events-none"
+      }`}
+      id="mobile-nav"
+      aria-hidden={!mobilMenu}
     >
-      {/* Kapatma Butonu 
-      <Button
-        size="sm"
-        gradientDuoTone="purpleToBlue"
-        onClick={() => dispatch(toggleMenu())}
-        className="w-full"
+      <nav
+        className="flex flex-col gap-2 px-4 py-4"
+        aria-label="Mobil menü"
       >
-        Close
-      </Button>*/}
-
-      {/* Menü İçeriği */}
-      <div className="flex flex-col space-y-3 sm:hidden px-8">
-        <Link to={"/panel?tab=profile"}>
-          <Button size="sm" outline  gradientDuoTone="greenToBlue" className="w-full">
-            Panel
-          </Button>
+        <Link
+          to="/panel?tab=profile"
+          className={linkClass}
+          onClick={() => dispatch(toggleMenu())}
+        >
+          Panel
         </Link>
-
-        <Link to={"/sign-in"}>
-          <Button 
-          size="sm" 
-          outline 
-          gradientDuoTone="greenToBlue" 
-          className="w-full">
-            Sign In
-          </Button>
+        <Link
+          to="/sign-in"
+          className={linkClass}
+          onClick={() => dispatch(toggleMenu())}
+        >
+          Giriş
         </Link>
-
-        <Link to={"/sign-up"}>
-          <Button 
-          size="sm" 
-          outline 
-          gradientDuoTone="greenToBlue" 
-          className="w-full">
-            Sign Up
-          </Button>
+        <Link
+          to="/sign-up"
+          className="flex w-full items-center justify-center rounded-xl bg-emerald-600 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700"
+          onClick={() => dispatch(toggleMenu())}
+        >
+          Kayıt ol
         </Link>
-        
-      </div>
+      </nav>
     </div>
   );
 }

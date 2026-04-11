@@ -1,121 +1,120 @@
-import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
-import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
+import { FileInput, TextInput } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import {
+  btnPrimary,
+  formCard,
+  formTitle,
+  inputRow,
+  shell,
+  uploadZone,
+} from "./adminUi";
+
+function homeImageSrc(path) {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `http://localhost:5000${path}`;
+}
 
 export default function UpdateHome() {
   const [file, setFile] = useState(null);
   const [formData, setFormData] = useState({});
   const { homeId } = useParams();
-
   const navigate = useNavigate();
-    const { currentUser } = useSelector((state) => state.user);
+  const { currentUser } = useSelector((state) => state.user);
 
   useEffect(() => {
-    try {
-      const fetchHome = async () => {
+    const fetchHome = async () => {
+      try {
         const res = await fetch(`/server/home/gethome?homeId=${homeId}`);
         const data = await res.json();
         if (!res.ok) {
           toast.error(data.message);
           return;
         }
-        if (res.ok) {
-          setFormData(data.home[0]);
-        }
-      };
-
-      fetchHome();
-    } catch (error) {
-      toast.error(error.message);
-    }
+        setFormData(data.home[0]);
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    fetchHome();
   }, [homeId]);
 
- 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
-    // FormData nesnesi oluştur
     const homeData = new FormData();
-    homeData.append('title', formData.title);
-    homeData.append('name', formData.name);
-  
-    // Yeni resim seçilmişse ekle, seçilmemişse eski resmi koru
-    if (file) {
-      homeData.append('image', file);
-    } else {
-      homeData.append('image', formData.image); 
-    }
-  
+    homeData.append("title", formData.title);
+    homeData.append("name", formData.name);
+    if (file) homeData.append("image", file);
+    else homeData.append("image", formData.image);
+
     try {
-      const res = await fetch(`/server/home/updatehome/${formData._id}/${currentUser._id}`, {
-        method: 'PUT',
-        body: homeData, // JSON yerine FormData gönder
-      });
-  
+      const res = await fetch(
+        `/server/home/updatehome/${formData._id}/${currentUser._id}`,
+        { method: "PUT", body: homeData }
+      );
       const data = await res.json();
       if (!res.ok) {
         toast.error(data.message);
         return;
       }
-  
-      navigate(`/panel?tab=home`);
-    } catch (error) {
-      toast.error('Something went wrong', error);
+      toast.success("Kayıt güncellendi.");
+      navigate("/panel?tab=home");
+    } catch {
+      toast.error("Güncelleme başarısız.");
     }
   };
-  
+
   return (
-    <div className='p-3 w-full bg-black/70  min-h-screen '>
-      <h1 className='text-center text-3xl my-7 font-semibold text-white'>Update home</h1>
-      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
-        <div className='flex flex-col gap-4 sm:flex-row justify-between'>
-          <input
-          
-            type='text'
-            placeholder='Title'
-            required
-            id='title'
-            className='flex-1 rounded-lg text-black'
-            onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
-            }
-            value={formData.title}
-          />
-          <input
-            type='text'
-            placeholder='name'
-            required
-            id='name'
-            className='flex-1 text-black rounded-lg'
-            onChange={(e) =>
-              setFormData({ ...formData, name: e.target.value })
-            }
-            value={formData.name}
-          />
+    <div className={`${shell} flex justify-center px-4 py-8`}>
+      <div className={formCard}>
+        <h1 className={formTitle}>Anasayfa kaydını düzenle</h1>
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+          <div className={inputRow}>
+            <TextInput
+              type="text"
+              placeholder="Başlık"
+              required
+              id="title"
+              className="min-w-0 flex-1"
+              value={formData.title ?? ""}
+              onChange={(e) =>
+                setFormData({ ...formData, title: e.target.value })
+              }
+            />
+            <TextInput
+              type="text"
+              placeholder="Ad"
+              required
+              id="name"
+              className="min-w-0 flex-1"
+              value={formData.name ?? ""}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
+            />
           </div>
-        <div className='flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3'>
-          <FileInput
-            type='file'
-            accept='image/*'
-            onChange={(e) => setFile(e.target.files[0])}
-          />
+          <div className={uploadZone}>
+            <FileInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+          </div>
+          {formData.image && (
+            <img
+              src={homeImageSrc(formData.image)}
+              alt=""
+              className="max-h-72 w-full rounded-xl border border-stone-200 object-contain dark:border-gray-600"
+            />
+          )}
+          <button type="submit" className={`${btnPrimary} w-full`}>
+            Güncelle
+          </button>
+        </form>
       </div>
-           
-        {formData.image && (
-          <img
-            src={`http://localhost:5000${formData.image}`}
-            alt='upload'
-            className='w-full h-72 object-contain'
-          />
-        )}
-        
-        <Button type='submit' gradientMonochrome="cyan">
-          Update post
-        </Button>
-        
-      </form>
     </div>
   );
 }

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   theme: 'light',
-  mobilMenu: true,
+  mobilMenu: false,
 };
 
 const headerSlice = createSlice({

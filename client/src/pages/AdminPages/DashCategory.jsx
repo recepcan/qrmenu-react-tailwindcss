@@ -1,63 +1,72 @@
-import { Modal, Table, Button } from 'flowbite-react';
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { toast } from 'react-toastify';
+import { Modal, Table, Button } from "flowbite-react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { toast } from "react-toastify";
+import {
+  btnPrimary,
+  card,
+  cardPad,
+  dangerLink,
+  emptyState,
+  linkAccent,
+  pageDesc,
+  pageHeader,
+  pageTitle,
+  tableScroll,
+  tableShell,
+} from "./adminUi";
 
 export default function DashCategory() {
   const { currentUser } = useSelector((state) => state.user);
   const [userCategory, setUserCategory] = useState([]);
-  const [totalCategory, setTotalCategory] = useState([]);
+  const [totalCategory, setTotalCategory] = useState(0);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [categoryIdToDelete, setCategoryIdToDelete] = useState('');
+  const [categoryIdToDelete, setCategoryIdToDelete] = useState("");
+
   useEffect(() => {
     const fetchCategory = async () => {
       try {
-        let res =null
-        if(currentUser.isOwner )  
-           { 
-            res = await fetch('/server/category/getcategory');       
-           }
-          else {
-            res = await fetch(`/server/category/getcategory?userId=${currentUser._id}`);
-          } 
+        let res = null;
+        if (currentUser.isOwner) {
+          res = await fetch("/server/category/getcategory");
+        } else {
+          res = await fetch(
+            `/server/category/getcategory?userId=${currentUser._id}`
+          );
+        }
         const data = await res.json();
         if (res.ok) {
           setUserCategory(data.category);
           setTotalCategory(data.totalCategory);
-
-          if (data.category.length < 9) {
-            setShowMore(false);
-          }
+          if (data.category.length < 9) setShowMore(false);
         }
       } catch (error) {
-        console.log(error.message);
+        toast.error(error.message);
       }
     };
-    if (currentUser.isAdmin) {
-        fetchCategory();
-    }
-  }, [currentUser._id]);
+    if (currentUser?.isAdmin) fetchCategory();
+  }, [currentUser?._id, currentUser?.isAdmin, currentUser?.isOwner]);
 
   const handleShowMore = async () => {
     const startIndex = userCategory.length;
     try {
-    let res =null
-    if(currentUser.isOwner )  
-       { 
-        res = await fetch(`/server/category/getcategory?startIndex=${startIndex}`);
+      let res = null;
+      if (currentUser.isOwner) {
+        res = await fetch(
+          `/server/category/getcategory?startIndex=${startIndex}`
+        );
+      } else {
+        res = await fetch(
+          `/server/category/getcategory?userId=${currentUser._id}&startIndex=${startIndex}`
+        );
       }
-      else {
-        res = await fetch(`/server/category/getcategory?userId=${currentUser._id}&startIndex=${startIndex}`);
-      };
       const data = await res.json();
       if (res.ok) {
         setUserCategory((prev) => [...prev, ...data.category]);
-        if (data.category.length < 9) {
-          setShowMore(false);
-        }
+        if (data.category.length < 9) setShowMore(false);
       }
     } catch (error) {
       toast.error(error.message);
@@ -69,118 +78,121 @@ export default function DashCategory() {
     try {
       const res = await fetch(
         `/server/category/deletecategory/${categoryIdToDelete}/${currentUser._id}`,
-        {
-          method: 'DELETE',
-        }
+        { method: "DELETE" }
       );
       const data = await res.json();
-      if (!res.ok) {
-        console.log(data.message);
-      } else {
+      if (!res.ok) toast.error(data.message);
+      else
         setUserCategory((prev) =>
-          prev.filter((category) => category._id !== categoryIdToDelete)
+          prev.filter((c) => c._id !== categoryIdToDelete)
         );
-      }
     } catch (error) {
       toast.error(error.message);
     }
   };
 
   return (
-    <div className='table-auto overflow-x-scroll md:mx-auto   p-3 flex flex-col items-center justify-center space-y-5
-     scrollbar-thin  scrollbar-track-slate-100 scrollbar-thumb-slate-300
-      dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
-    <div>
-    total category: {totalCategory}
-     </div>
-    {currentUser.isAdmin && userCategory?.length > 0 ? (
-        <div className='w-full shadow-md dark:shadow-none shadow-gray-400  rounded-lg'>
-          <Table hoverable className='shadow-md   w-full'>
-            <Table.Head>
-              <Table.HeadCell>Username</Table.HeadCell>
-              <Table.HeadCell>category image</Table.HeadCell>
-              <Table.HeadCell>category title</Table.HeadCell>
-              <Table.HeadCell>Category name</Table.HeadCell>
-              <Table.HeadCell>Delete</Table.HeadCell>
-              <Table.HeadCell>
-                <span>Edit</span>
-              </Table.HeadCell>
-            </Table.Head>
-            {userCategory.map((category) => (
-              <Table.Body className='divide-y' key={category._id}>
-                <Table.Row className='bg-white border dark:border-gray-700 dark:bg-gray-800'>
-                  <Table.Cell>
-                   {category.username}
-                  </Table.Cell>
-                  <Table.Cell>
-                    
-                  <img
-                  src={category.image}  // Burada Cloudinary'den gelen URL'yi doğrudan kullanıyoruz
-                  alt={category.title}
-                  className='w-20 h-10 object-cover bg-gray-500'
-                />
-                    
-                  </Table.Cell>
-                  <Table.Cell>
-                    
-                      {category.title}
-                   
-                  </Table.Cell>
-                  <Table.Cell>{category.name}</Table.Cell>
-                  <Table.Cell>
-                    <span
-                      onClick={() => {
-                        setShowModal(true);
-                        setCategoryIdToDelete(category._id);
-                      }}
-                      className='font-medium text-red-500 hover:underline cursor-pointer'
+    <div className="space-y-6">
+      <div className={pageHeader}>
+        <div>
+          <h1 className={pageTitle}>Kategoriler</h1>
+          <p className={pageDesc}>
+            Toplam{" "}
+            <span className="font-semibold text-stone-700 dark:text-stone-300">
+              {totalCategory}
+            </span>{" "}
+            kategori
+          </p>
+        </div>
+      </div>
+
+      {currentUser?.isAdmin && userCategory?.length > 0 ? (
+        <div className={`${card} overflow-hidden p-0`}>
+          <div className={tableScroll}>
+            <div className={tableShell}>
+              <Table hoverable>
+                <Table.Head>
+                  <Table.HeadCell>Kullanıcı</Table.HeadCell>
+                  <Table.HeadCell>Görsel</Table.HeadCell>
+                  <Table.HeadCell>Başlık</Table.HeadCell>
+                  <Table.HeadCell>Ad (URL)</Table.HeadCell>
+                  <Table.HeadCell>Sil</Table.HeadCell>
+                  <Table.HeadCell>Düzenle</Table.HeadCell>
+                </Table.Head>
+                <Table.Body className="divide-y dark:divide-gray-700">
+                  {userCategory.map((category) => (
+                    <Table.Row
+                      key={category._id}
+                      className="bg-white dark:border-gray-700 dark:bg-gray-800/80"
                     >
-                      Delete
-                    </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link
-                      className='text-teal-500 hover:underline'
-                      to={`/update-category/${category._id}`}
-                    >
-                      <span>Edit</span>
-                    </Link>
-                  </Table.Cell>
-                </Table.Row>
-              </Table.Body>
-            ))}
-          </Table>
+                      <Table.Cell>{category.username}</Table.Cell>
+                      <Table.Cell>
+                        <img
+                          src={category.image}
+                          alt=""
+                          className="h-10 w-20 rounded-lg object-cover bg-stone-200 dark:bg-gray-700"
+                        />
+                      </Table.Cell>
+                      <Table.Cell className="max-w-xs">
+                        <span className="line-clamp-2">{category.title}</span>
+                      </Table.Cell>
+                      <Table.Cell>{category.name}</Table.Cell>
+                      <Table.Cell>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setShowModal(true);
+                            setCategoryIdToDelete(category._id);
+                          }}
+                          className={dangerLink}
+                        >
+                          Sil
+                        </button>
+                      </Table.Cell>
+                      <Table.Cell>
+                        <Link
+                          className={linkAccent}
+                          to={`/update-category/${category._id}`}
+                        >
+                          Düzenle
+                        </Link>
+                      </Table.Cell>
+                    </Table.Row>
+                  ))}
+                </Table.Body>
+              </Table>
+            </div>
+          </div>
           {showMore && (
-            <button
-              onClick={handleShowMore}
-              className='w-full text-teal-500 self-center text-sm py-7'
-            >
-              Show more
-            </button>
+            <div className={`${cardPad} border-t border-stone-100 dark:border-gray-700`}>
+              <button type="button" className={`${btnPrimary} w-full`} onClick={handleShowMore}>
+                Daha fazla yükle
+              </button>
+            </div>
           )}
         </div>
       ) : (
-        <p>You have no categorys yet!</p>
+        <p className={emptyState}>
+          {currentUser?.isAdmin
+            ? "Henüz kategori eklenmemiş."
+            : "Bu alanı görüntüleme yetkiniz yok."}
+        </p>
       )}
-      <Modal
-        show={showModal}
-        onClose={() => setShowModal(false)}
-        popup
-        size='md'
-      >
+
+      <Modal show={showModal} onClose={() => setShowModal(false)} popup size="md">
         <Modal.Header />
         <Modal.Body>
-          <div className='text-center'>
-            <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto' />
-            <h3 className='mb-5 text-lg text-gray-500 dark:text-gray-400'>
-              Are you sure you want to delete this category?
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-stone-400 dark:text-gray-500" />
+            <h3 className="mb-5 text-lg text-stone-600 dark:text-gray-300">
+              Bu kategoriyi silmek istediğinize emin misiniz?
             </h3>
-            <div className='flex justify-center gap-4'>
-              <Button color='failure' onClick={handleDeleteCategory}>
-                Yes, I'm sure
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeleteCategory}>
+                Evet, sil
               </Button>
-              <Button color='gray' onClick={() => setShowModal(false)}>
-                No, cancel
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                Vazgeç
               </Button>
             </div>
           </div>
