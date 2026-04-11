@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { signInFailure, signInStart, signInSuccess } from '../store/userSlice'
@@ -9,24 +9,48 @@ function SignIn() {
   const dispatch = useDispatch()
   const { loading } = useSelector(state => state.user)
   const navigate = useNavigate()
+
+  // formdata'yı ref ile de takip ediyoruz — autofill onChange'i tetiklemediğinde
+  // input'ların gerçek değerini ref üzerinden okuyoruz
+  const emailRef = useRef(null)
+  const passwordRef = useRef(null)
+
   const [formdata, setformData] = useState({ email: '', password: '' })
 
+  // Tarayıcı autofill'i bazen onChange'i geciktirerek tetikler.
+  // useEffect ile kısa bir süre sonra ref'ten okuyarak state'i senkronize ediyoruz.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const email = emailRef.current?.value ?? ''
+      const password = passwordRef.current?.value ?? ''
+      if (email || password) {
+        setformData({ email, password })
+      }
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
   const handleChange = (e) => {
-    setformData({ ...formdata, [e.target.id]: e.target.value.trim() })
+    setformData(prev => ({ ...prev, [e.target.id]: e.target.value.trim() }))
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const { email, password } = formdata
+
+    // Submit anında ref'ten de oku — autofill state'e yansımamış olabilir
+    const email = formdata.email || emailRef.current?.value?.trim() || ''
+    const password = formdata.password || passwordRef.current?.value?.trim() || ''
+
     if (!email || !password) {
       return toast.error('Lütfen bütün alanları doldurun')
     }
+
     try {
       dispatch(signInStart())
       const res = await fetch('/server/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formdata),
+        body: JSON.stringify({ email, password }),
         credentials: 'include',
       })
       const data = await res.json()
@@ -39,6 +63,7 @@ function SignIn() {
         navigate('/panel')
       }
     } catch (error) {
+      dispatch(signInFailure(error.message))
       toast.error(error?.message ?? 'Giriş yapılamadı.')
     }
   }
@@ -95,6 +120,7 @@ function SignIn() {
                 E-posta
               </label>
               <input
+                ref={emailRef}
                 id="email"
                 type="email"
                 placeholder="ornek@email.com"
@@ -120,6 +146,7 @@ function SignIn() {
                 Şifre
               </label>
               <input
+                ref={passwordRef}
                 id="password"
                 type="password"
                 placeholder="••••••••"
