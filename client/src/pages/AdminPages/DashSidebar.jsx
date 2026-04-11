@@ -32,41 +32,6 @@ function NavPill({ to, active, children, icon }) {
   );
 }
 
-function SubMenu({ label, icon, active, items }) {
-  return (
-    <details
-      className={`group relative shrink-0 rounded-xl border ${
-        active
-          ? "border-emerald-500/80 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-950/40"
-          : "border-stone-200 bg-white dark:border-gray-600 dark:bg-gray-800"
-      }`}
-    >
-      <summary
-        className="flex cursor-pointer list-none items-center gap-2 px-3 py-2 text-sm font-semibold text-stone-800 dark:text-stone-100 sm:px-4 [&::-webkit-details-marker]:hidden"
-      >
-        <span className="text-lg" aria-hidden>
-          {icon}
-        </span>
-        <span className="max-md:sr-only sm:inline">{label}</span>
-        <span className="text-xs text-stone-400 dark:text-gray-500 md:hidden">
-          ▾
-        </span>
-      </summary>
-      <div className="absolute left-0 top-full z-50 mt-1 min-w-[11rem] rounded-xl border border-stone-200 bg-white py-1 shadow-lg dark:border-gray-600 dark:bg-gray-800">
-        {items.map((item) => (
-          <Link
-            key={item.link}
-            to={item.link}
-            className="block px-4 py-2.5 text-sm text-stone-700 transition hover:bg-stone-100 dark:text-stone-200 dark:hover:bg-gray-700/80"
-          >
-            {item.title}
-          </Link>
-        ))}
-      </div>
-    </details>
-  );
-}
-
 function DashSidebar({ activeTab }) {
   const location = useLocation();
   const dispatch = useDispatch();
@@ -116,35 +81,29 @@ function DashSidebar({ activeTab }) {
             Profil
           </NavPill>
 
-          <SubMenu
-            label="Ürünler"
-            icon={<MdCreateNewFolder />}
+          <NavPill
+            to="/panel?tab=products"
             active={activeTab === "products"}
-            items={[
-              { title: "Tüm ürünler", link: "/panel?tab=products" },
-              { title: "Yeni ürün", link: "/create-product" },
-            ]}
-          />
+            icon={<MdCreateNewFolder />}
+          >
+            Ürünler
+          </NavPill>
 
-          <SubMenu
-            label="Kategoriler"
-            icon={<BiSolidCategory />}
+          <NavPill
+            to="/panel?tab=category"
             active={activeTab === "category"}
-            items={[
-              { title: "Tüm kategoriler", link: "/panel?tab=category" },
-              { title: "Yeni kategori", link: "/create-category" },
-            ]}
-          />
+            icon={<BiSolidCategory />}
+          >
+            Kategoriler
+          </NavPill>
 
-          <SubMenu
-            label="Anasayfa"
-            icon={<HiPhotograph />}
+          <NavPill
+            to="/panel?tab=home"
             active={activeTab === "home"}
-            items={[
-              { title: "Tüm kayıtlar", link: "/panel?tab=home" },
-              { title: "Yeni kayıt", link: "/create-home" },
-            ]}
-          />
+            icon={<HiPhotograph />}
+          >
+            Anasayfa
+          </NavPill>
 
           {currentUser?.isOwner && (
             <NavPill

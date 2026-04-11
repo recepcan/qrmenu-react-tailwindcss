@@ -1,108 +1,186 @@
 import React, { useState } from 'react'
-import { AiFillGoogleCircle } from 'react-icons/ai'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { signInFailure, signInStart, signInSuccess } from '../store/userSlice'
 import { toast } from 'react-toastify'
 import Oauth from '../Components/Oauth'
-import { Button } from 'flowbite-react'
 
 function SignIn() {
+  const dispatch = useDispatch()
+  const { loading } = useSelector(state => state.user)
+  const navigate = useNavigate()
+  const [formdata, setformData] = useState({ email: '', password: '' })
 
-    const dispatch = useDispatch()
-    const { error: errorMessage, loading, currentUser } = useSelector(state => state.user)
+  const handleChange = (e) => {
+    setformData({ ...formdata, [e.target.id]: e.target.value.trim() })
+  }
 
-    const navigate = useNavigate()
-    const [formdata, setformData] = useState({ email: "", password: "" })
-    const handleChange = (e) => {
-        setformData({ ...formdata, [e.target.id]: e.target.value.trim() })
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const { email, password } = formdata
+    if (!email || !password) {
+      return toast.error('Lütfen bütün alanları doldurun')
     }
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        if (!email || !password) {
-            return toast.error('Lütfen bütün alanları doldurun')
-        }
-
-        try {
-            dispatch(signInStart())
-            const res = await fetch('/server/auth/signin', {
-                method: "POST",
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formdata),
-                credentials: 'include'// Kimlik bilgilerini (cookie'leri) cross-origin isteklerde gönderir
-
-            })
-            const data = await res.json()
-            if (data.success === false) {
-                toast.error(data.message)
-            }
-
-            if (res.ok) {
-
-                dispatch(signInSuccess(data))
-                navigate('/panel ')
-            }
-        } catch (error) {
-          (toast.error(error))
-        }
-
-
-
+    try {
+      dispatch(signInStart())
+      const res = await fetch('/server/auth/signin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formdata),
+        credentials: 'include',
+      })
+      const data = await res.json()
+      if (data.success === false) {
+        dispatch(signInFailure(data.message))
+        return toast.error(data.message)
+      }
+      if (res.ok) {
+        dispatch(signInSuccess(data))
+        navigate('/panel')
+      }
+    } catch (error) {
+      toast.error(error?.message ?? 'Giriş yapılamadı.')
     }
+  }
 
-    return (
+  return (
+    <div className="min-h-screen flex items-center justify-center px-4 py-12
+                    bg-white dark:bg-[#0d1117]
+                    transition-colors duration-300">
 
-        <div className='w-full py-20 md:space-x-5   min-h-[800px]   flex max-md:flex-col  items-center justify-center'>
+      {/* Ambient glow — sadece dark modda görünür */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-32 -right-20 w-96 h-96 rounded-full
+                        dark:bg-emerald-400/10 blur-3xl" />
+        <div className="absolute -bottom-24 -left-16 w-80 h-80 rounded-full
+                        dark:bg-teal-400/10 blur-3xl" />
+      </div>
 
+      <div className="relative z-10 w-full max-w-md">
 
-            <div className="w-1/3 max-md:w-full md:h-[600px]   flex  flex-col items-center justify-center ">
-            <div className='flex  items-center justify-center  w-full'>
-            <h1 className='bg-gradient-to-br  from-green-300 via-teal-500 to-green-900  text-white p-5 rounded-2xl sm:text-3xl  text-xl font-bold font-sans'>qr</h1><span className='font-bold md:text-5xl text-2xl font-sans'> menu</span>
-             </div>
-             <h2 className='p-5  text-lg font-bold font-sans text-justify'>This is a demo project. you can sign in with your email and password or with google</h2>
-     
+        {/* Kart */}
+        <div className="rounded-2xl border p-8 shadow-xl
+                        bg-white border-stone-200 shadow-stone-100
+                        dark:bg-white/[0.04] dark:border-white/[0.08] dark:shadow-black/40
+                        dark:backdrop-blur-md">
+
+          {/* Logo */}
+          <div className="flex items-center justify-center gap-2 mb-2">
+            <span className="bg-gradient-to-br from-emerald-400 to-teal-600
+                             text-white font-extrabold text-lg px-3 py-1.5 rounded-xl
+                             shadow-lg shadow-emerald-500/30">
+              qr
+            </span>
+            <span className="font-bold text-2xl tracking-tight
+                             text-stone-900 dark:text-stone-100">
+              menu
+            </span>
+          </div>
+
+          <p className="text-center text-sm mb-8 mt-1
+                        text-stone-400 dark:text-stone-500">
+            Hesabınıza giriş yapın
+          </p>
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+
+            {/* E-posta */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="email"
+                className="block text-[11px] font-bold tracking-widest uppercase
+                           text-stone-400 dark:text-stone-500"
+              >
+                E-posta
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="ornek@email.com"
+                onChange={handleChange}
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none
+                           transition-all duration-200
+                           bg-stone-50 border border-stone-200 text-stone-800
+                           placeholder:text-stone-300
+                           focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20
+                           dark:bg-white/5 dark:border-white/10 dark:text-stone-100
+                           dark:placeholder:text-stone-600
+                           dark:focus:border-emerald-400/60 dark:focus:ring-emerald-400/10"
+              />
             </div>
-            <div className="w-1/2 max-md:w-full  md:h-[600px]   flex items-center justify-center ">
-                <form className='flex flex-col items-center justify-center space-y-3 h-full  w-full md:border border-black dark:border-white  transition-all
-                 duration-300   gap-5  shadow-gray-400 p-5 
-                 rounded-lg '
-                 onSubmit={handleSubmit}>
-                   
-                    <div className='space-y-3 w-full'>
-                        <div className='text-sm font-bold'>
-                            your email
-                            <input 
-                            id='email' 
-                            onChange={handleChange} 
-                            className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' 
-                            type="email" 
-                            placeholder='email' />
-                        </div>
-                        <div className='text-sm font-bold'>
-                            your password
-                            <input 
-                            id='password' 
-                            onChange={handleChange} 
-                            className='p-3  border-2 rounded-lg dark:bg-gray-700 transition-all duration-300 outline-none w-full' 
-                            type="password" placeholder='password' />
-                        </div>
 
-                        
-                    </div>
-                    <Button 
-                    type='submit'
-                    outline
-                    size="xl"
-                    gradientDuoTone="greenToBlue" 
-                    className='w-full  rounded-lg transition-all'>
-                    SignIn
-                    </Button>
-              <Oauth/>
-                    </form>
+            {/* Şifre */}
+            <div className="space-y-1.5">
+              <label
+                htmlFor="password"
+                className="block text-[11px] font-bold tracking-widest uppercase
+                           text-stone-400 dark:text-stone-500"
+              >
+                Şifre
+              </label>
+              <input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                onChange={handleChange}
+                className="w-full rounded-xl px-4 py-3 text-sm outline-none
+                           transition-all duration-200
+                           bg-stone-50 border border-stone-200 text-stone-800
+                           placeholder:text-stone-300
+                           focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20
+                           dark:bg-white/5 dark:border-white/10 dark:text-stone-100
+                           dark:placeholder:text-stone-600
+                           dark:focus:border-emerald-400/60 dark:focus:ring-emerald-400/10"
+              />
             </div>
+
+            {/* Giriş Yap butonu */}
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full py-3.5 rounded-xl font-extrabold text-sm tracking-wide
+                         text-white transition-all duration-200
+                         bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-600
+                         shadow-lg shadow-emerald-500/40
+                         hover:shadow-xl hover:shadow-emerald-500/50 hover:brightness-110 hover:-translate-y-0.5
+                         active:translate-y-0 active:brightness-95
+                         disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0
+                         dark:shadow-emerald-500/20 dark:hover:shadow-emerald-500/40"
+            >
+              {loading ? 'Giriş yapılıyor...' : 'Giriş Yap'}
+            </button>
+          </form>
+
+          {/* Ayraç */}
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-stone-200 dark:bg-white/10" />
+            <span className="text-[10px] font-bold tracking-widest uppercase
+                             text-stone-300 dark:text-stone-600">
+              ya da
+            </span>
+            <div className="flex-1 h-px bg-stone-200 dark:bg-white/10" />
+          </div>
+
+          {/* Google OAuth */}
+          <Oauth />
+
+          {/* Footer */}
+          <p className="text-center text-xs mt-6
+                        text-stone-400 dark:text-stone-500">
+            Hesabınız yok mu?{' '}
+            <Link
+              to="/sign-up"
+              className="font-bold text-emerald-500 hover:text-emerald-400 transition-colors"
+            >
+              Kayıt ol
+            </Link>
+          </p>
 
         </div>
-    )
+      </div>
+    </div>
+  )
 }
 
 export default SignIn
